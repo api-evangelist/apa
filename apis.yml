@@ -1,7 +1,12 @@
 aid: apa
-url: https://raw.githubusercontent.com/api-evangelist/apa/refs/heads/main/apis.yml
+url: 
+  https://raw.githubusercontent.com/api-evangelist/apa/refs/heads/main/apis.yml
 modified: '2026-03-21'
 apis: []
 common:
   - type: Website
     url: https://www.apa.com
+description: >-
+  APA Corporation is an independent energy company that explores for, develops, and
+  produces natural gas, crude oil, and natural gas liquids, with operations in the
+  United States, Egypt, and the United Kingdom.
