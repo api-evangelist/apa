@@ -37,6 +37,8 @@ apis:
       - type: GettingStarted
         url: https://investor.apacorp.com
 common:
+  - type: LinkedIn
+    url: https://www.linkedin.com/company/apa-corporation
   - type: Website
     url: https://apacorp.com
   - type: Documentation
