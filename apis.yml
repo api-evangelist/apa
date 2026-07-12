@@ -37,6 +37,8 @@ apis:
       - type: GettingStarted
         url: https://investor.apacorp.com
 common:
+  - type: DomainSecurity
+    url: security/apa-domain-security.yml
   - type: LinkedIn
     url: https://www.linkedin.com/company/apa-corporation
   - type: Website
@@ -84,6 +86,8 @@ common:
         description: >-
           APA Corporation is listed on Nasdaq (ticker: APA) and Nasdaq Texas,
           enabling trading and investor relations integrations.
+  - url: https://apacorp.com/feed/
+    type: Blog
 maintainers:
   - FN: Kin Lane
     email: kin@apievangelist.com
