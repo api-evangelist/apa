@@ -7,6 +7,17 @@ description: >-
   Delaware and headquartered in Houston, Texas, APA is listed on Nasdaq (APA)
   and listed on Nasdaq Texas since March 2026.
 type: Index
+deliveryModel:
+  model: unknown
+  open_source: false
+  commercial: false
+  callable_host: false
+  label: Delivery model not determined — needs a product licence on record
+  confidence: low
+  source:
+  - none
+  generated: '2026-08-28'
+  method: derived
 accessModel:
   pricing: freemium
   onboarding: unknown
