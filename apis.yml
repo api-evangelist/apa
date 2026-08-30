@@ -32,7 +32,7 @@ accessModel:
   method: derived
 image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/icons/apa.png
 tags:
-  - Oil and Gas
+  - Oil And Gas
   - Energy
   - Exploration
   - Production
@@ -55,7 +55,7 @@ apis:
       Apache Corporation and APA Suriname subsidiaries.
     humanURL: https://apacorp.com
     tags:
-      - Oil and Gas
+      - Oil And Gas
       - Energy
       - Exploration
       - Production
