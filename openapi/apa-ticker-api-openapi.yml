@@ -1,0 +1,150 @@
+openapi: 3.2.0
+info:
+  title: APA Corporation Ticker API
+  version: apa-ticker/v1
+  description: 'The one route on apacorp.com that APA Corporation registered itself rather than inheriting from WordPress or a plugin: `apa-ticker/v1`, a public, unauthenticated, CORS-open JSON endpoint returning the delayed APA (Nasdaq: APA) share-price quote used by the ticker on the corporate site. Verified live on 2026-09-14 returning `{"symbol":"APA","price":45.09,...,"source":"nasdaq"}` with `Cache-Control: max-age=600`. The response schema below was read from that observed response; the endpoint publishes no OPTIONS argument schema because it takes no parameters.'
+  contact:
+    name: APA Corporation
+    url: https://apacorp.com/newsroom/contact-media-relations/
+  x-derived-from: https://apacorp.com/wp-json/ route index + per-route HTTP OPTIONS schema documents
+  x-derived-on: '2026-09-14'
+  x-api-evangelist-note: Third-party profile. APA Corporation publishes no developer program; this documents the anonymously readable WordPress REST content API served from apacorp.com. Every path, parameter and schema here was read from the server's own published OPTIONS documents, or from an observed live response, on 2026-09-14 — nothing is invented.
+  x-response-derived-from: observed live response of https://apacorp.com/wp-json/apa-ticker/v1/quote on 2026-09-14
+servers:
+- url: https://apacorp.com/wp-json
+  description: APA Corporation WordPress REST API
+tags:
+- name: Ticker
+  description: APA Corporation delayed share-price quote.
+paths:
+  /apa-ticker/v1/quote:
+    get:
+      operationId: getApaShareQuote
+      summary: Retrieve the APA share-price quote
+      tags:
+      - Ticker
+      description: 'Return the delayed APA Corporation (Nasdaq: APA) share-price quote that drives the ticker rendered across apacorp.com. The route takes no parameters, requires no credentials, sets `Access-Control-Allow-Origin: *`, and is served with `Cache-Control: max-age=600, must-revalidate`, so a caller should expect a value up to ten minutes old.'
+      parameters: []
+      responses:
+        '200':
+          description: The current delayed quote.
+          headers:
+            Cache-Control:
+              description: 'Observed live: `max-age=600, must-revalidate`.'
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Quote'
+              examples:
+                observed:
+                  summary: Response observed live on 2026-09-14
+                  value:
+                    symbol: APA
+                    price: 45.09
+                    change: 0.06
+                    percent: 0.13
+                    is_up: true
+                    source: nasdaq
+        '404': &id001
+          description: No such resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /apa-ticker/v1:
+    get:
+      operationId: getTickerNamespaceIndex
+      summary: Retrieve the ticker namespace index
+      tags:
+      - Ticker
+      description: Return the WordPress namespace index for `apa-ticker/v1`, listing the routes registered under it and their supported methods. Self-describing discovery for this namespace.
+      parameters:
+      - name: context
+        in: query
+        schema:
+          default: view
+      - name: namespace
+        in: query
+        schema:
+          default: apa-ticker/v1
+      responses:
+        '200':
+          description: The namespace index.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NamespaceIndex'
+        '404': *id001
+components:
+  schemas:
+    Quote:
+      type: object
+      description: A delayed APA Corporation share-price quote as returned by the live endpoint on 2026-09-14.
+      properties:
+        symbol:
+          type: string
+          description: 'Ticker symbol. Observed value: `APA`.'
+          examples:
+          - APA
+        price:
+          type: number
+          description: Last quoted share price.
+          examples:
+          - 45.09
+        change:
+          type: number
+          description: Absolute change against the previous close.
+          examples:
+          - 0.06
+        percent:
+          type: number
+          description: Percentage change against the previous close.
+          examples:
+          - 0.13
+        is_up:
+          type: boolean
+          description: True when the price moved up against the previous close.
+          examples:
+          - true
+        source:
+          type: string
+          description: 'Upstream quote source. Observed value: `nasdaq`.'
+          examples:
+          - nasdaq
+    NamespaceIndex:
+      type: object
+      description: WordPress namespace index describing the routes registered under `apa-ticker/v1`.
+      properties:
+        namespace:
+          type: string
+        routes:
+          type: object
+        _links:
+          type: object
+    Error:
+      type: object
+      title: Error
+      description: WordPress REST API error envelope. Not RFC 9457 problem+json.
+      properties:
+        code:
+          type: string
+        message:
+          type: string
+        data:
+          type: object
+          properties:
+            status:
+              type: integer
+      required:
+      - code
+      - message
+  securitySchemes:
+    applicationPassword:
+      type: http
+      scheme: basic
+      description: 'WordPress application passwords. The site''s own root discovery document at https://apacorp.com/wp-json/ publishes this as its only authentication method, with the authorization endpoint at https://apacorp.com/wp-admin/authorize-application.php. Credentials are a WordPress username plus an application password sent as HTTP Basic. It is NOT required for anything documented here: every operation in this spec was verified to answer anonymously on 2026-09-14. An authenticated caller additionally unlocks context=edit fields and the write methods, which are out of scope for this public profile.'
+security:
+- {}
+- applicationPassword: []

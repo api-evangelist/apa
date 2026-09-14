@@ -1,0 +1,95 @@
+generated: '2026-09-14'
+method: probed
+source: live HTTPS probes of every host this record knows
+provider: APA Corporation
+providerId: apa
+description: >-
+  Probe of the RFC 8615 /.well-known/ namespace on every host in this record — the registrable
+  domain, its www alias, the API base host (apacorp.com/wp-json resolves to the same host) and the
+  investor-relations host. Nothing was found: apacorp.com and www.apacorp.com return 404 for every
+  named path, and investor.apacorp.com answers 403 "Access Denied" from its edge for every path
+  including the document root, so nothing there could be read. No WellKnown or SecurityTxt pointer
+  is emitted in apis.yml, because a recorded absence is not a served surface.
+result: none
+hosts:
+  - host: apacorp.com
+    note: >-
+      Registrable domain and the host serving the WordPress REST API at /wp-json. Every named path
+      404s. The 404 body is the site's own WordPress 404 page (HTML), not a document.
+    documents:
+      - path: /.well-known/security.txt
+        status: 404
+        file: null
+      - path: /.well-known/openid-configuration
+        status: 404
+        file: null
+      - path: /.well-known/oauth-authorization-server
+        status: 404
+        file: null
+      - path: /.well-known/api-catalog
+        status: 404
+        file: null
+      - path: /.well-known/ai-plugin.json
+        status: 404
+        file: null
+      - path: /.well-known/agent-card.json
+        status: 404
+        file: null
+      - path: /.well-known/agent.json
+        status: 404
+        file: null
+  - host: www.apacorp.com
+    note: Alias of apacorp.com; identical 404 behaviour on every named path.
+    documents:
+      - path: /.well-known/security.txt
+        status: 404
+        file: null
+      - path: /.well-known/openid-configuration
+        status: 404
+        file: null
+      - path: /.well-known/oauth-authorization-server
+        status: 404
+        file: null
+      - path: /.well-known/api-catalog
+        status: 404
+        file: null
+      - path: /.well-known/ai-plugin.json
+        status: 404
+        file: null
+      - path: /.well-known/agent-card.json
+        status: 404
+        file: null
+      - path: /.well-known/agent.json
+        status: 404
+        file: null
+  - host: investor.apacorp.com
+    note: >-
+      Investor-relations host. Its edge returns 403 "Access Denied" to our crawler for every path,
+      including the document root, and drops the connection on a retry with full browser headers.
+      This is an edge bot policy, not evidence that the paths are absent — the host is not readable
+      by us, so no claim is made about what it does or does not serve.
+    documents:
+      - path: /.well-known/security.txt
+        status: 403
+        file: null
+      - path: /.well-known/openid-configuration
+        status: 403
+        file: null
+      - path: /.well-known/oauth-authorization-server
+        status: 403
+        file: null
+      - path: /.well-known/api-catalog
+        status: 403
+        file: null
+      - path: /.well-known/ai-plugin.json
+        status: 403
+        file: null
+      - path: /.well-known/agent-card.json
+        status: 403
+        file: null
+      - path: /.well-known/agent.json
+        status: 403
+        file: null
+maintainers:
+  - FN: Kin Lane
+    email: kin@apievangelist.com

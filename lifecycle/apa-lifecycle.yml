@@ -1,0 +1,70 @@
+generated: '2026-09-14'
+method: probed
+source: live probes of apacorp.com on 2026-09-14 + the wp-json route index
+provider: APA Corporation
+providerId: apa
+description: >-
+  Lifecycle posture of the APA Corporation REST surface. The honest summary is that there is no
+  lifecycle programme, because there is no API programme: APA has not published a versioning policy,
+  a deprecation policy, an SLA, a changelog or a status page for this surface, and none of the
+  machine-readable lifecycle signals are present on the wire. What stability the surface has is
+  inherited from WordPress core, not committed to by APA.
+versioning:
+  policy_published: false
+  scheme: namespace-in-path
+  current:
+    - namespace: wp/v2
+      note: WordPress core. Stable across WordPress releases; APA does not control it.
+    - namespace: apa-ticker/v1
+      note: APA's own namespace, currently v1. No published policy for how a v2 would be introduced.
+    - namespace: oembed/1.0
+      note: oEmbed 1.0, versioned by the standard.
+  breaking_change_policy: null
+  evidence: >-
+    Read from the namespaces[] array of https://apacorp.com/wp-json/ on 2026-09-14. No policy page
+    exists; https://apacorp.com/changelog/ returned 404.
+deprecation:
+  policy_published: false
+  sunset_header: false
+  deprecation_header: false
+  deprecated_operations: []
+  evidence: >-
+    No Sunset (RFC 8594) or Deprecation header appeared on any response observed on 2026-09-14, and
+    no operation in the eleven derived OpenAPIs carries deprecated: true. No deprecation policy page
+    was found.
+  note: >-
+    Recorded as absent, not as clean. An operator relying on apa-ticker/v1/quote has no notice
+    mechanism if APA retires or reshapes it.
+status_page:
+  published: false
+  url: null
+  evidence: >-
+    https://status.apacorp.com/ does not resolve (connection failure, 2026-09-14). No status or
+    uptime page is linked from apacorp.com. No status-page pointer is emitted in apis.yml.
+sla:
+  published: false
+  evidence: No service-level commitment exists for this surface. There is no customer relationship to attach one to.
+changelog:
+  published: false
+  evidence: https://apacorp.com/changelog/ returned 404 on 2026-09-14. No dated release notes were found on any host.
+  note: >-
+    The nearest thing to a change feed APA does publish is the newsroom RSS at
+    https://apacorp.com/feed/ — corporate news, not API change history.
+support:
+  developer_support_channel: false
+  general_contact: https://apacorp.com/newsroom/contact-media-relations/
+  note: >-
+    The only published contact route is media relations. There is no developer support channel,
+    no forum and no issue tracker for this surface.
+observed_stability_signals:
+  - signal: Cache-Control max-age=600, must-revalidate
+    note: Ten-minute edge cache on the ticker quote and the collection routes.
+  - signal: Last-Modified
+    note: Returned on collection responses; usable as a cheap change check.
+  - signal: X-WP-Total
+    note: >-
+      Observed 2026-09-14 — posts 51, pages 79, media 1209, leaderships 25, presto-videos 24,
+      wprss_feed_item 10, users 5, categories 1, tags 0. A future run can diff these to detect drift.
+maintainers:
+  - FN: Kin Lane
+    email: kin@apievangelist.com

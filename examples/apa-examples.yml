@@ -1,0 +1,30 @@
+generated: '2026-09-14'
+method: probed
+source: live responses captured from https://apacorp.com/wp-json on 2026-09-14
+provider: APA Corporation
+providerId: apa
+description: Real response payloads captured from the live APA Corporation REST surface. These are verbatim server output, not hand-written samples — they are what a caller actually receives.
+examples:
+- file: examples/apa-ticker-quote.json
+  operationId: getApaShareQuote
+  url: https://apacorp.com/wp-json/apa-ticker/v1/quote
+  status: 200
+  note: The full response body. Six fields, 91 bytes.
+- file: examples/apa-newsroom-posts.json
+  operationId: listNewsroomPosts
+  url: https://apacorp.com/wp-json/wp/v2/posts?per_page=2&_fields=id,date,slug,link,title,excerpt,author,categories
+  status: 200
+  note: Two newsroom posts with _fields applied, demonstrating the field-selection convention.
+- file: examples/apa-leadership.json
+  operationId: listLeadership
+  url: https://apacorp.com/wp-json/wp/v2/leaderships?per_page=3&_fields=id,slug,link,title,acf
+  status: 200
+  note: Three leadership profiles from the APA-registered leaderships post type.
+- file: examples/apa-discovery-types.json
+  operationId: listContentTypes
+  url: https://apacorp.com/wp-json/wp/v2/types
+  status: 200
+  note: The full content-type registration map — the document that reveals the four APA-specific resources.
+maintainers:
+- FN: Kin Lane
+  email: kin@apievangelist.com

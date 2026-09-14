@@ -1,0 +1,94 @@
+# APA Corporation
+
+> APA Corporation (Nasdaq: APA) is an independent energy company that explores for, develops and
+> produces natural gas, crude oil and natural gas liquids, with operations in the United States,
+> Egypt, the United Kingdom and Suriname. It is organized in Delaware and headquartered in Houston,
+> Texas.
+
+APA publishes **no developer program, no API documentation, no OpenAPI, no SDK, no API keys and no
+pricing**. It does, however, serve a real, public, credential-free REST API: the WordPress backend of
+apacorp.com at `https://apacorp.com/wp-json`, plus one route APA registered itself. This file
+describes what is genuinely callable, and is written by API Evangelist, not by APA.
+
+Generated: 2026-09-14 by the API Evangelist enrichment pipeline.
+Method: generated from artifacts in https://github.com/api-evangelist/apa, all of which were probed
+live on 2026-09-14.
+
+## What is callable
+
+Base URL: `https://apacorp.com/wp-json`
+Authentication: none required. Anonymous GET, `Access-Control-Allow-Origin: *`.
+Caching: `Cache-Control: max-age=600, must-revalidate` on every documented route.
+Rate limits: none published, and no rate-limit header is returned.
+
+- [Ticker API](https://apacorp.com/wp-json/apa-ticker/v1/quote): the delayed APA share-price quote.
+  The one route APA built rather than inherited. Returns `symbol`, `price`, `change`, `percent`,
+  `is_up`, `source`. Edge-cached 600s — this is not a real-time price.
+- [Newsroom API](https://apacorp.com/wp-json/wp/v2/posts): press releases and community stories.
+  51 published posts as of 2026-09-14.
+- [Leadership API](https://apacorp.com/wp-json/wp/v2/leaderships): executive and board profiles.
+  An APA-registered post type, 25 published entries.
+- [Pages API](https://apacorp.com/wp-json/wp/v2/pages): corporate and operational pages covering the
+  US, Egypt, UK and Suriname operations, sustainability, governance and careers. 79 published pages.
+- [Media Hub API](https://apacorp.com/wp-json/wp/v2/presto-videos): APA corporate video entries (24),
+  alongside the media library at `/wp/v2/media` (1,209 attachments).
+- [Feed Items API](https://apacorp.com/wp-json/wp/v2/wprss_feed_item): syndicated items APA
+  aggregates onto its site. 10 published.
+- [Authors API](https://apacorp.com/wp-json/wp/v2/users): the 5 public bylines on newsroom content.
+- [Taxonomy API](https://apacorp.com/wp-json/wp/v2/categories): 1 category, 0 tags — present but
+  effectively unused, so do not build topic filters on it.
+- [Search API](https://apacorp.com/wp-json/wp/v2/search): cross-resource search. Measured thin —
+  a search for "energy" returned 0 results. Use the per-collection `search` parameter instead.
+- [Discovery API](https://apacorp.com/wp-json/wp/v2/types): self-describing registration metadata.
+  Read this first; it is what reveals the APA-specific resources.
+- [oEmbed API](https://apacorp.com/wp-json/oembed/1.0/embed): oEmbed 1.0 payloads for apacorp.com
+  URLs. The one cross-vendor domain standard this surface declares.
+- [Newsroom RSS](https://apacorp.com/feed/): RSS 2.0 feed of the same newsroom content.
+
+## How to call it correctly
+
+- `per_page` is capped at 100. Exceeding it returns `400 rest_invalid_param` naming the bound.
+- Read `X-WP-Total` and `X-WP-TotalPages`; follow the RFC 8288 `Link rel="next"`. Paging past the end
+  returns `400 rest_post_invalid_page_number`, not an empty array.
+- Use `_fields` to trim responses and `_embed` to inline authors, terms and featured media instead of
+  making a lookup per record.
+- Use `after` / `modified_after` (ISO 8601) for incremental reads. There is no webhook, no event
+  surface and no changelog to subscribe to.
+- Ids are site-unique WordPress post ids, not per-collection sequences. Never iterate from 1; never
+  carry an id between collections. `GET /wp/v2/leaderships/1` returns 404.
+- `context=edit` returns `401 rest_forbidden_context`. `/wp/v2/menus` returns `401 rest_cannot_view`
+  and is deliberately excluded from this profile.
+- Errors are the WordPress envelope `{code, message, data.status}`, **not** RFC 9457 problem+json.
+  Branch on `code`.
+
+## What is not there
+
+- No OpenAPI published by APA. `/openapi.json`, `/swagger.json`, `/api-docs` and `/redoc` all 404.
+- No MCP server. No `mcp` namespace in the route index; `mcp/apa-mcp.yml` is a derived candidate only.
+- No A2A agent card. `/.well-known/agent-card.json` and `/.well-known/agent.json` 404 on every host.
+- No `/.well-known/` documents at all: security.txt, openid-configuration, oauth-authorization-server,
+  api-catalog and ai-plugin.json all 404 on apacorp.com and www.apacorp.com.
+- No GraphQL, gRPC, SOAP/WSDL or AsyncAPI surface.
+- No status page, SLA, deprecation policy, changelog or developer support channel.
+- No SDKs or client libraries published by APA on any registry.
+- `investor.apacorp.com` returns 403 to automated clients and could not be read.
+
+## Company links
+
+- [Website](https://apacorp.com)
+- [Newsroom RSS](https://apacorp.com/feed/)
+- [Media relations contact](https://apacorp.com/newsroom/contact-media-relations/)
+- [Sustainability](https://apacorp.com/sustainability/)
+- [Careers](https://apacorp.com/careers/)
+- [Terms of use](https://apacorp.com/terms-of-use/)
+- [Privacy policy](https://apacorp.com/privacy-policy/)
+- [LinkedIn](https://www.linkedin.com/company/apa-corporation)
+
+## API Evangelist artifacts
+
+Full machine-readable profile: https://github.com/api-evangelist/apa
+
+- `openapi/` — 11 OpenAPI 3.2.0 documents, 28 operations, derived from the server's own OPTIONS
+  schema documents. Not provider-published.
+- `authentication/`, `conventions/`, `errors/`, `conformance/`, `lifecycle/`, `data-model/`,
+  `rate-limits/`, `plans/`, `well-known/`, `packages/`, `agentic-access/`, `examples/`, `skills/`.

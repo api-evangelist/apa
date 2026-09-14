@@ -1,0 +1,38 @@
+generated: '2026-09-14'
+method: searched
+source: npm registry search, PyPI, and the apacorp.com surface — all negative
+provider: APA Corporation
+providerId: apa
+description: >-
+  APA Corporation publishes no client libraries. This file records a checked absence, not an
+  unchecked gap. No SDKs pointer is emitted in apis.yml, because there is no SDK to point at.
+package_count: 0
+official_package_count: 0
+packages: []
+searched:
+  - registry: npm
+    query: https://registry.npmjs.org/-/v1/search?text=apacorp
+    result: 0 packages
+    checked: '2026-09-14'
+  - registry: pypi
+    query: https://pypi.org/pypi/apacorp/json
+    result: 404
+    checked: '2026-09-14'
+  - registry: github
+    query: https://github.com/apacorp
+    result: >-
+      200 — an organisation named "APA CORP" exists but has no public repositories and no public
+      members, carries no description or website, and cannot be confirmed as this company. No
+      GitHubOrganization pointer is emitted on that basis.
+    checked: '2026-09-14'
+  - registry: provider-docs
+    query: https://apacorp.com/
+    result: No SDK, client library or developer page exists on the corporate site.
+    checked: '2026-09-14'
+note: >-
+  The surface profiled here is the WordPress REST API. Generic third-party WordPress clients exist
+  on npm and PyPI and will work against it, but none is published by APA and none is listed here —
+  an SDK a provider did not ship is not that provider's SDK.
+maintainers:
+  - FN: Kin Lane
+    email: kin@apievangelist.com

@@ -1,0 +1,109 @@
+generated: '2026-09-14'
+method: probed
+source: live probes of https://apacorp.com and https://apacorp.com/wp-json on 2026-09-14
+provider: APA Corporation
+providerId: apa
+description: What the APA Corporation surface actually conforms to, judged from the contract and the wire, not from marketing prose. APA is an upstream oil-and-gas explorer and producer with no developer program; the standards it meets are the ones its WordPress platform implements, and the one cross-vendor content standard it genuinely declares is oEmbed 1.0. The energy-sector regulatory standards are recorded here as explicitly not applicable, with the reason stated, rather than silently omitted.
+conformance:
+- id: oembed-1.0
+  label: oEmbed 1.0
+  conforms: true
+  evidence: GET https://apacorp.com/wp-json/oembed/1.0/embed?url=https://apacorp.com/ returned 200 with a conforming oEmbed payload — version "1.0", provider_name "APA Corporation", provider_url, author_name, title, type, thumbnail and html. Verified 2026-09-14.
+  url: https://apacorp.com/wp-json/oembed/1.0/embed?url=https://apacorp.com/
+  domain_standard: true
+  note: This is the one genuine cross-vendor domain standard the contract declares. It is what lets a third-party surface render an APA newsroom link as a card with no bespoke integration.
+- id: rss-2.0
+  label: RSS 2.0
+  conforms: true
+  evidence: GET https://apacorp.com/feed/ returned 200 application/rss+xml with a document root of <rss version="2.0"> carrying the content, wfw, dc, atom and sy modules. Verified 2026-09-14. The feed is also advertised from the homepage <head> as rel="alternate".
+  url: https://apacorp.com/feed/
+  domain_standard: true
+- id: rfc8288-web-linking
+  label: RFC 8288 Web Linking
+  conforms: true
+  evidence: GET /wp-json/wp/v2/posts?per_page=1 returned a Link header of <https://apacorp.com/wp-json/wp/v2/posts?per_page=1&page=2>; rel="next", and the root document advertises <https://apacorp.com/wp-json/>; rel="https://api.w.org/". Verified 2026-09-14.
+- id: cors
+  label: W3C Cross-Origin Resource Sharing
+  conforms: true
+  evidence: Access-Control-Allow-Origin "*", Access-Control-Allow-Methods "GET" and Access-Control-Expose-Headers "X-WP-Total, X-WP-TotalPages, Link" observed on every documented route. Verified 2026-09-14.
+- id: wp-rest-v2
+  label: WordPress REST API wp/v2
+  conforms: true
+  evidence: The route index at https://apacorp.com/wp-json/ declares namespace wp/v2 with 148 registered routes, and every route answers its own OPTIONS schema document. Verified 2026-09-14.
+  domain_standard: true
+  note: 'Worth recording as a domain standard in its own right: an integrator who already speaks wp/v2 needs no bespoke connector for this surface, which is most of its practical value.'
+- id: rfc9457-problem-details
+  label: RFC 9457 Problem Details
+  conforms: false
+  evidence: Error bodies are the WordPress envelope {code, message, data.status} served as application/json — no type URI, no title, no instance, and not application/problem+json. Observed verbatim on 2026-09-14 at GET /wp/v2/posts/99999999.
+- id: oauth2
+  label: OAuth 2.0
+  conforms: false
+  evidence: https://apacorp.com/.well-known/oauth-authorization-server returned 404 on 2026-09-14.
+- id: oidc
+  label: OpenID Connect
+  conforms: false
+  evidence: https://apacorp.com/.well-known/openid-configuration returned 404 on 2026-09-14.
+- id: rfc9116-security-txt
+  label: RFC 9116 security.txt
+  conforms: false
+  evidence: https://apacorp.com/.well-known/security.txt returned 404 on 2026-09-14 (and on www.apacorp.com).
+- id: rfc8594-sunset-header
+  label: RFC 8594 Sunset header
+  conforms: false
+  evidence: No Sunset or Deprecation header observed on any response on 2026-09-14.
+- id: openapi
+  label: OpenAPI
+  conforms: false
+  evidence: APA publishes no OpenAPI. /openapi.json, /openapi.yaml, /swagger.json, /api-docs, /v1/openapi.json and /redoc all returned 404 on apacorp.com on 2026-09-14. The eleven OpenAPI documents in this repository are API Evangelist derivations from the server's own OPTIONS documents, marked as such in each info block, and are not a provider-published contract.
+- id: asyncapi
+  label: AsyncAPI
+  conforms: false
+  evidence: No event, streaming or webhook surface exists. No AsyncAPI document was found on any host.
+- id: soap-wsdl
+  label: SOAP / WSDL
+  conforms: false
+  evidence: https://apacorp.com/?wsdl and /?singleWsdl both return HTTP 200 — but the body is the WordPress homepage as text/html, because WordPress ignores unrecognised query strings. This is a status-code false positive, not a contract. /services?wsdl and /soap?wsdl return 404. No SOAP surface exists. Checked 2026-09-14.
+- id: ogc
+  label: OGC API / OWS
+  conforms: false
+  applicable: false
+  evidence: 'No evidence pointed at a geospatial surface, so no blind path probing was done. For completeness the conventional subdomains were resolved and none exists: geo., gis., maps. and data..apacorp.com are all NXDOMAIN as of 2026-09-14. An upstream E&P operator holds substantial geospatial data, but APA publishes none of it.'
+- id: grpc-protobuf
+  label: gRPC / Protobuf
+  conforms: false
+  evidence: No .proto published on any APA host, and github.com/apacorp has no public repositories. Checked 2026-09-14.
+regulatory:
+  regime: Energy & Utilities
+  regime_id: energy_utilities
+  applicable: false
+  basis: 'The Kin Score energy_utilities regime covers customer energy data and network open data — a consumer data right over usage and billing, and network data published under licence conditions. APA Corporation is an upstream exploration-and-production company: it sells hydrocarbons to counterparties, operates no distribution network, holds no retail energy customers and is subject to none of these regimes. Each is recorded below as not applicable with its reason, rather than as a failure.'
+  standards:
+  - id: cdr-energy-australia
+    label: CDR Energy (Australia)
+    conforms: false
+    applicable: false
+    evidence: APA Corporation has no Australian operations and no retail energy customers; the Consumer Data Right energy sector applies to retailers and AEMO-registered participants.
+  - id: green-button-espi
+    label: Green Button / ESPI (North America)
+    conforms: false
+    applicable: false
+    evidence: Green Button / ESPI standardises a utility customer's own usage data. APA is an upstream producer with no metered end customers.
+  - id: smart-energy-code-dcc
+    label: Smart Energy Code + DCC (GB)
+    conforms: false
+    applicable: false
+    evidence: APA's UK activity is North Sea offshore production, not a licensed GB supply or network business, so it is not a Smart Energy Code party.
+  - id: ofgem-data-best-practice
+    label: Ofgem Data Best Practice
+    conforms: false
+    applicable: false
+    evidence: Ofgem Data Best Practice is a licence condition on GB network and supply licensees. APA holds no such licence.
+  - id: ferc-order-889-oasis
+    label: FERC Order 889 / OASIS (US)
+    conforms: false
+    applicable: false
+    evidence: FERC Order 889 OASIS obligations fall on transmission providers. APA is an E&P operator and does not own transmission.
+maintainers:
+- FN: Kin Lane
+  email: kin@apievangelist.com

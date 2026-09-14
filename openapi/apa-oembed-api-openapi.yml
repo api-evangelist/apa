@@ -1,0 +1,118 @@
+openapi: 3.2.0
+info:
+  title: APA Corporation oEmbed API
+  version: oembed/1.0
+  description: 'Public, unauthenticated oEmbed 1.0 provider for apacorp.com URLs. Given any apacorp.com page or post URL it returns the standard oEmbed rich/link payload — provider name, author, title, thumbnail and embed HTML — which is how third-party surfaces render an APA newsroom link as a card. Verified live on 2026-09-14 returning `provider_name: APA Corporation`.'
+  contact:
+    name: APA Corporation
+    url: https://apacorp.com/newsroom/contact-media-relations/
+  x-derived-from: https://apacorp.com/wp-json/ route index + per-route HTTP OPTIONS schema documents
+  x-derived-on: '2026-09-14'
+  x-api-evangelist-note: Third-party profile. APA Corporation publishes no developer program; this documents the anonymously readable WordPress REST content API served from apacorp.com. Every path, parameter and schema here was read from the server's own published OPTIONS documents, or from an observed live response, on 2026-09-14 — nothing is invented.
+servers:
+- url: https://apacorp.com/wp-json
+  description: APA Corporation WordPress REST API
+tags:
+- name: oEmbed
+  description: oEmbed 1.0 discovery and embed payloads for apacorp.com URLs.
+paths:
+  /oembed/1.0/embed:
+    get:
+      operationId: getOembedPayload
+      summary: Retrieve an oEmbed payload
+      tags:
+      - oEmbed
+      description: Return the oEmbed 1.0 payload for an apacorp.com URL.
+      parameters:
+      - name: format
+        in: query
+        schema:
+          default: json
+      - name: maxwidth
+        in: query
+        schema:
+          default: 600
+      - name: url
+        in: query
+        schema:
+          type: string
+          format: uri
+        description: The URL of the resource for which to fetch oEmbed data.
+        required: true
+      responses:
+        '200':
+          description: The oEmbed payload.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OEmbed'
+        '404':
+          description: No such resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+components:
+  schemas:
+    OEmbed:
+      type: object
+      description: oEmbed 1.0 response as observed live on 2026-09-14.
+      properties:
+        version:
+          type: string
+          examples:
+          - '1.0'
+        provider_name:
+          type: string
+          examples:
+          - APA Corporation
+        provider_url:
+          type: string
+          format: uri
+        author_name:
+          type: string
+        author_url:
+          type: string
+          format: uri
+        title:
+          type: string
+        type:
+          type: string
+        width:
+          type: integer
+        height:
+          type: integer
+        html:
+          type: string
+        thumbnail_url:
+          type: string
+          format: uri
+        thumbnail_width:
+          type: integer
+        thumbnail_height:
+          type: integer
+    Error:
+      type: object
+      title: Error
+      description: WordPress REST API error envelope. Not RFC 9457 problem+json.
+      properties:
+        code:
+          type: string
+        message:
+          type: string
+        data:
+          type: object
+          properties:
+            status:
+              type: integer
+      required:
+      - code
+      - message
+  securitySchemes:
+    applicationPassword:
+      type: http
+      scheme: basic
+      description: 'WordPress application passwords. The site''s own root discovery document at https://apacorp.com/wp-json/ publishes this as its only authentication method, with the authorization endpoint at https://apacorp.com/wp-admin/authorize-application.php. Credentials are a WordPress username plus an application password sent as HTTP Basic. It is NOT required for anything documented here: every operation in this spec was verified to answer anonymously on 2026-09-14. An authenticated caller additionally unlocks context=edit fields and the write methods, which are out of scope for this public profile.'
+security:
+- {}
+- applicationPassword: []

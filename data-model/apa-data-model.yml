@@ -1,0 +1,345 @@
+generated: '2026-09-14'
+method: derived
+source: openapi/*.yml in this repository, themselves derived from the provider's own OPTIONS schema documents on 2026-09-14
+provider: APA Corporation
+providerId: apa
+description: 'Entity-relationship graph for the APA Corporation REST surface, derived from the schemas the server publishes in its own OPTIONS documents. The shape is the WordPress content model: a small number of post-like entities joined by integer id references rather than by $ref, so the relationships below were read from the id-carrying fields (author, featured_media, categories, tags, parent) rather than from schema composition. Four of the entities are APA-registered rather than stock WordPress — Leadership, MediaHubVideo, VisualizerChart and FeedItem — and those are where anything APA-specific lives.'
+id_scheme:
+  style: integer
+  note: All entities are keyed by a site-unique integer WordPress post or term id. Ids are unique across the whole site, not per collection, so an id valid for one collection returns rest_post_invalid_id on another — observed live at GET /wp/v2/leaderships/1.
+entities:
+- name: Attachment
+  source_specs:
+  - openapi/apa-media-hub-api-openapi.yml
+  fields:
+  - acf
+  - alt_text
+  - author
+  - caption
+  - class_list
+  - comment_status
+  - date
+  - date_gmt
+  - description
+  - featured_media
+  - filename
+  - filesize
+  - guid
+  - id
+  - link
+  - media_details
+  - media_type
+  - meta
+  - mime_type
+  - modified
+  - modified_gmt
+  - ping_status
+  - post
+  - publishpress_future_workflow_manual_trigger
+  - slug
+  - source_url
+  - status
+  - template
+  - title
+  - type
+  description: Media library item — image, PDF or document. 1,209 published.
+  field_count: 30
+- name: Category
+  source_specs:
+  - openapi/apa-taxonomy-api-openapi.yml
+  fields:
+  - acf
+  - count
+  - description
+  - id
+  - link
+  - meta
+  - name
+  - parent
+  - slug
+  - taxonomy
+  description: Newsroom category term. 1 published (uncategorised).
+  field_count: 10
+- name: Leaderships
+  source_specs:
+  - openapi/apa-leadership-api-openapi.yml
+  fields:
+  - acf
+  - class_list
+  - content
+  - date
+  - date_gmt
+  - guid
+  - id
+  - link
+  - modified
+  - modified_gmt
+  - publishpress_future_workflow_manual_trigger
+  - slug
+  - status
+  - template
+  - title
+  - type
+  description: Derived from the provider OPTIONS schema document.
+  field_count: 16
+- name: NamespaceIndex
+  source_specs:
+  - openapi/apa-ticker-api-openapi.yml
+  fields:
+  - _links
+  - namespace
+  - routes
+  description: WordPress namespace registration record. Not a stored entity — discovery metadata.
+  field_count: 3
+- name: OEmbed
+  source_specs:
+  - openapi/apa-oembed-api-openapi.yml
+  fields:
+  - author_name
+  - author_url
+  - height
+  - html
+  - provider_name
+  - provider_url
+  - thumbnail_height
+  - thumbnail_url
+  - thumbnail_width
+  - title
+  - type
+  - version
+  - width
+  description: oEmbed 1.0 payload. Not a stored entity — a projection of a Post or Page.
+  field_count: 13
+- name: Page
+  source_specs:
+  - openapi/apa-pages-api-openapi.yml
+  fields:
+  - acf
+  - author
+  - class_list
+  - comment_status
+  - content
+  - date
+  - date_gmt
+  - excerpt
+  - featured_media
+  - guid
+  - id
+  - link
+  - menu_order
+  - meta
+  - modified
+  - modified_gmt
+  - parent
+  - ping_status
+  - publishpress_future_action
+  - publishpress_future_workflow_manual_trigger
+  - slug
+  - status
+  - template
+  - title
+  - type
+  description: Static corporate page. 79 published.
+  field_count: 25
+- name: Post
+  source_specs:
+  - openapi/apa-newsroom-api-openapi.yml
+  fields:
+  - acf
+  - author
+  - categories
+  - class_list
+  - comment_status
+  - content
+  - date
+  - date_gmt
+  - excerpt
+  - featured_media
+  - format
+  - guid
+  - id
+  - link
+  - meta
+  - modified
+  - modified_gmt
+  - ping_status
+  - publishpress_future_action
+  - publishpress_future_workflow_manual_trigger
+  - slug
+  - status
+  - sticky
+  - tags
+  - template
+  - title
+  - type
+  description: Newsroom post. 51 published as of 2026-09-14.
+  field_count: 27
+- name: PpVideoBlock
+  source_specs:
+  - openapi/apa-media-hub-api-openapi.yml
+  fields:
+  - acf
+  - class_list
+  - content
+  - date
+  - date_gmt
+  - guid
+  - id
+  - link
+  - meta
+  - modified
+  - modified_gmt
+  - pp_video_tag
+  - publishpress_future_workflow_manual_trigger
+  - slug
+  - status
+  - template
+  - title
+  - type
+  description: Derived from the provider OPTIONS schema document.
+  field_count: 18
+- name: Quote
+  source_specs:
+  - openapi/apa-ticker-api-openapi.yml
+  fields:
+  - change
+  - is_up
+  - percent
+  - price
+  - source
+  - symbol
+  description: APA delayed share-price quote. Not a stored entity — a live upstream read from Nasdaq.
+  field_count: 6
+- name: SearchResult
+  source_specs:
+  - openapi/apa-search-api-openapi.yml
+  fields:
+  - _links
+  - id
+  - subtype
+  - title
+  - type
+  - url
+  description: Lightweight cross-resource search record. Not a stored entity — a projection.
+  field_count: 6
+- name: Tag
+  source_specs:
+  - openapi/apa-taxonomy-api-openapi.yml
+  fields:
+  - count
+  - description
+  - id
+  - link
+  - meta
+  - name
+  - slug
+  - taxonomy
+  description: Newsroom tag term. 0 published.
+  field_count: 8
+- name: User
+  source_specs:
+  - openapi/apa-authors-api-openapi.yml
+  fields:
+  - acf
+  - description
+  - elementor_introduction
+  - id
+  - link
+  - meta
+  - name
+  - password
+  - slug
+  - url
+  description: Public author record. 5 published.
+  field_count: 10
+- name: WprssFeedItem
+  source_specs:
+  - openapi/apa-feed-items-api-openapi.yml
+  fields:
+  - acf
+  - author
+  - content
+  - date
+  - date_gmt
+  - excerpt
+  - featured_media
+  - guid
+  - id
+  - link
+  - meta
+  - modified
+  - modified_gmt
+  - publishpress_future_workflow_manual_trigger
+  - slug
+  - status
+  - template
+  - title
+  - type
+  description: Derived from the provider OPTIONS schema document.
+  field_count: 19
+relationships:
+- from: Post
+  to: User
+  type: belongs_to
+  via: author
+  note: Every newsroom post carries an integer author id resolving to a public User.
+- from: Post
+  to: Category
+  type: has_many
+  via: categories
+  note: Array of integer category term ids. Effectively unused — all 51 posts sit under the single uncategorised term.
+- from: Post
+  to: Tag
+  type: has_many
+  via: tags
+  note: Array of integer tag term ids. Empty in practice — 0 tags exist.
+- from: Post
+  to: Attachment
+  type: has_one
+  via: featured_media
+  note: Integer attachment id, 0 when no featured image is set.
+- from: Page
+  to: Page
+  type: belongs_to
+  via: parent
+  note: Pages are hierarchical; parent is the integer id of the containing page, 0 at the root.
+- from: Page
+  to: Attachment
+  type: has_one
+  via: featured_media
+  note: Integer attachment id.
+- from: Page
+  to: User
+  type: belongs_to
+  via: author
+  note: Integer author id.
+- from: Leadership
+  to: Attachment
+  type: has_one
+  via: featured_media
+  note: Headshot, where set. Leadership is not hierarchical and carries no taxonomy.
+- from: MediaHubVideo
+  to: Attachment
+  type: has_one
+  via: featured_media
+  note: Poster frame, where set.
+- from: Attachment
+  to: Post
+  type: belongs_to
+  via: post
+  note: Integer id of the post or page the attachment was uploaded to, 0 when unattached.
+- from: Category
+  to: Category
+  type: belongs_to
+  via: parent
+  note: Categories are hierarchical.
+- from: User
+  to: Post
+  type: has_many
+  via: (reverse of Post.author)
+  note: Resolved by querying /wp/v2/posts?author={id} rather than by a field on User.
+not_related:
+- note: Quote, OEmbed, SearchResult and NamespaceIndex participate in no relationship. They are projections or live upstream reads, not stored records.
+maintainers:
+- FN: Kin Lane
+  email: kin@apievangelist.com

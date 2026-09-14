@@ -1,0 +1,336 @@
+generated: '2026-09-14'
+method: derived
+source: openapi/*.yml in this repository; no MCP server exists on any APA host
+provider: APA Corporation
+providerId: apa
+status: candidate
+description: 'APA Corporation ships no MCP server. This is a CANDIDATE manifest derived from the eleven OpenAPI documents in this repository, showing what an MCP server over the public apacorp.com REST surface would expose if anyone built one. Nothing here is running: there is no endpoint to POST to and no package to install. The candidate is worth recording because the underlying surface is unusually well suited to it — 28 read-only, credential-free, CORS-open operations with server-published parameter schemas — but an agent cannot reach it today.'
+deployment:
+  mode: none
+  endpoint: null
+  install: null
+  package: null
+  auth: none
+  verified: derived
+  note: 'Probed 2026-09-14: no /mcp route on apacorp.com, no mcp namespace in the wp-json route index (49 namespaces registered, none of them mcp), no hosted server found in search, and no npm or PyPI package published by APA. mode is none because nobody ships a server — not because one was found and left unrecorded. No endpoint URL is invented here.'
+probes:
+- url: https://apacorp.com/wp-json/
+  status: 200
+  note: Route index read; namespaces[] contains no mcp entry.
+- url: https://apacorp.com/.well-known/ai-plugin.json
+  status: 404
+- url: https://apacorp.com/.well-known/agent-card.json
+  status: 404
+tool_count: 28
+tools:
+- name: listAuthors
+  title: List authors
+  description: Retrieve a paginated collection of authors who have published newsroom content.
+  rest:
+    method: GET
+    path: /wp/v2/users
+    spec: openapi/apa-authors-api-openapi.yml
+  input_schema_source: openapi/apa-authors-api-openapi.yml -> paths./wp/v2/users.get.parameters
+  read_only: true
+  consequence: none
+  auth_required: false
+- name: getAuthor
+  title: Retrieve an author
+  description: Retrieve a single public author record by numeric identifier.
+  rest:
+    method: GET
+    path: /wp/v2/users/{id}
+    spec: openapi/apa-authors-api-openapi.yml
+  input_schema_source: openapi/apa-authors-api-openapi.yml -> paths./wp/v2/users/{id}.get.parameters
+  read_only: true
+  consequence: none
+  auth_required: false
+- name: listContentTypes
+  title: List registered content types
+  description: Return every content type registered on apacorp.com, keyed by slug, with its REST base and namespace. This is how a caller discovers the APA-specific resources — `leaderships`, `presto-videos`, `visualizer`, `wprss_feed_item` — that are not part of stock WordPress.
+  rest:
+    method: GET
+    path: /wp/v2/types
+    spec: openapi/apa-discovery-api-openapi.yml
+  input_schema_source: openapi/apa-discovery-api-openapi.yml -> paths./wp/v2/types.get.parameters
+  read_only: true
+  consequence: none
+  auth_required: false
+- name: listTaxonomies
+  title: List registered taxonomies
+  description: Return every taxonomy registered on apacorp.com, keyed by slug, with the content types it applies to and its REST base.
+  rest:
+    method: GET
+    path: /wp/v2/taxonomies
+    spec: openapi/apa-discovery-api-openapi.yml
+  input_schema_source: openapi/apa-discovery-api-openapi.yml -> paths./wp/v2/taxonomies.get.parameters
+  read_only: true
+  consequence: none
+  auth_required: false
+- name: listPostStatuses
+  title: List post statuses
+  description: Return every post status registered on apacorp.com, keyed by slug. Anonymous callers only ever see `publish`.
+  rest:
+    method: GET
+    path: /wp/v2/statuses
+    spec: openapi/apa-discovery-api-openapi.yml
+  input_schema_source: openapi/apa-discovery-api-openapi.yml -> paths./wp/v2/statuses.get.parameters
+  read_only: true
+  consequence: none
+  auth_required: false
+- name: getContentType
+  title: Retrieve a content type
+  description: Return the registration record for a single content type, including its REST base, namespace, hierarchy and supported features.
+  rest:
+    method: GET
+    path: /wp/v2/types/{type}
+    spec: openapi/apa-discovery-api-openapi.yml
+  input_schema_source: openapi/apa-discovery-api-openapi.yml -> paths./wp/v2/types/{type}.get.parameters
+  read_only: true
+  consequence: none
+  auth_required: false
+- name: getTaxonomy
+  title: Retrieve a taxonomy
+  description: Return the registration record for a single taxonomy.
+  rest:
+    method: GET
+    path: /wp/v2/taxonomies/{taxonomy}
+    spec: openapi/apa-discovery-api-openapi.yml
+  input_schema_source: openapi/apa-discovery-api-openapi.yml -> paths./wp/v2/taxonomies/{taxonomy}.get.parameters
+  read_only: true
+  consequence: none
+  auth_required: false
+- name: getPostStatus
+  title: Retrieve a post status
+  description: Return the registration record for a single post status.
+  rest:
+    method: GET
+    path: /wp/v2/statuses/{status}
+    spec: openapi/apa-discovery-api-openapi.yml
+  input_schema_source: openapi/apa-discovery-api-openapi.yml -> paths./wp/v2/statuses/{status}.get.parameters
+  read_only: true
+  consequence: none
+  auth_required: false
+- name: listFeedItems
+  title: List aggregated feed items
+  description: Retrieve a paginated collection of syndicated feed items aggregated onto apacorp.com.
+  rest:
+    method: GET
+    path: /wp/v2/wprss_feed_item
+    spec: openapi/apa-feed-items-api-openapi.yml
+  input_schema_source: openapi/apa-feed-items-api-openapi.yml -> paths./wp/v2/wprss_feed_item.get.parameters
+  read_only: true
+  consequence: none
+  auth_required: false
+- name: getFeedItem
+  title: Retrieve an aggregated feed item
+  description: Retrieve a single aggregated feed item by numeric identifier.
+  rest:
+    method: GET
+    path: /wp/v2/wprss_feed_item/{id}
+    spec: openapi/apa-feed-items-api-openapi.yml
+  input_schema_source: openapi/apa-feed-items-api-openapi.yml -> paths./wp/v2/wprss_feed_item/{id}.get.parameters
+  read_only: true
+  consequence: none
+  auth_required: false
+- name: listLeadership
+  title: List leadership profiles
+  description: Retrieve a paginated collection of published APA Corporation leadership profiles (executives and board members).
+  rest:
+    method: GET
+    path: /wp/v2/leaderships
+    spec: openapi/apa-leadership-api-openapi.yml
+  input_schema_source: openapi/apa-leadership-api-openapi.yml -> paths./wp/v2/leaderships.get.parameters
+  read_only: true
+  consequence: none
+  auth_required: false
+- name: getLeadershipProfile
+  title: Retrieve a leadership profile
+  description: Retrieve a single published leadership profile by its numeric WordPress identifier.
+  rest:
+    method: GET
+    path: /wp/v2/leaderships/{id}
+    spec: openapi/apa-leadership-api-openapi.yml
+  input_schema_source: openapi/apa-leadership-api-openapi.yml -> paths./wp/v2/leaderships/{id}.get.parameters
+  read_only: true
+  consequence: none
+  auth_required: false
+- name: listMediaHubVideos
+  title: List Media Hub videos
+  description: Retrieve a paginated collection of published APA Corporation Media Hub video entries.
+  rest:
+    method: GET
+    path: /wp/v2/presto-videos
+    spec: openapi/apa-media-hub-api-openapi.yml
+  input_schema_source: openapi/apa-media-hub-api-openapi.yml -> paths./wp/v2/presto-videos.get.parameters
+  read_only: true
+  consequence: none
+  auth_required: false
+- name: getMediaHubVideo
+  title: Retrieve a Media Hub video
+  description: Retrieve a single published Media Hub video entry by its numeric WordPress identifier.
+  rest:
+    method: GET
+    path: /wp/v2/presto-videos/{id}
+    spec: openapi/apa-media-hub-api-openapi.yml
+  input_schema_source: openapi/apa-media-hub-api-openapi.yml -> paths./wp/v2/presto-videos/{id}.get.parameters
+  read_only: true
+  consequence: none
+  auth_required: false
+- name: listMediaAttachments
+  title: List media attachments
+  description: Retrieve a paginated collection of media library attachments — images, PDFs and documents published on apacorp.com, including investor and operational report PDFs.
+  rest:
+    method: GET
+    path: /wp/v2/media
+    spec: openapi/apa-media-hub-api-openapi.yml
+  input_schema_source: openapi/apa-media-hub-api-openapi.yml -> paths./wp/v2/media.get.parameters
+  read_only: true
+  consequence: none
+  auth_required: false
+- name: getMediaAttachment
+  title: Retrieve a media attachment
+  description: Retrieve a single media attachment by its numeric WordPress identifier, including its source URL and generated size variants.
+  rest:
+    method: GET
+    path: /wp/v2/media/{id}
+    spec: openapi/apa-media-hub-api-openapi.yml
+  input_schema_source: openapi/apa-media-hub-api-openapi.yml -> paths./wp/v2/media/{id}.get.parameters
+  read_only: true
+  consequence: none
+  auth_required: false
+- name: listNewsroomPosts
+  title: List newsroom posts
+  description: Retrieve a paginated collection of published APA Corporation newsroom posts, filterable by date, author, category, tag and free-text search.
+  rest:
+    method: GET
+    path: /wp/v2/posts
+    spec: openapi/apa-newsroom-api-openapi.yml
+  input_schema_source: openapi/apa-newsroom-api-openapi.yml -> paths./wp/v2/posts.get.parameters
+  read_only: true
+  consequence: none
+  auth_required: false
+- name: getNewsroomPost
+  title: Retrieve a newsroom post
+  description: Retrieve a single published newsroom post by its numeric WordPress identifier.
+  rest:
+    method: GET
+    path: /wp/v2/posts/{id}
+    spec: openapi/apa-newsroom-api-openapi.yml
+  input_schema_source: openapi/apa-newsroom-api-openapi.yml -> paths./wp/v2/posts/{id}.get.parameters
+  read_only: true
+  consequence: none
+  auth_required: false
+- name: getOembedPayload
+  title: Retrieve an oEmbed payload
+  description: Return the oEmbed 1.0 payload for an apacorp.com URL.
+  rest:
+    method: GET
+    path: /oembed/1.0/embed
+    spec: openapi/apa-oembed-api-openapi.yml
+  input_schema_source: openapi/apa-oembed-api-openapi.yml -> paths./oembed/1.0/embed.get.parameters
+  read_only: true
+  consequence: none
+  auth_required: false
+- name: listPages
+  title: List corporate pages
+  description: Retrieve a paginated collection of published apacorp.com corporate pages, filterable by parent, menu order, slug and free-text search.
+  rest:
+    method: GET
+    path: /wp/v2/pages
+    spec: openapi/apa-pages-api-openapi.yml
+  input_schema_source: openapi/apa-pages-api-openapi.yml -> paths./wp/v2/pages.get.parameters
+  read_only: true
+  consequence: none
+  auth_required: false
+- name: getPage
+  title: Retrieve a corporate page
+  description: Retrieve a single published corporate page by its numeric WordPress identifier.
+  rest:
+    method: GET
+    path: /wp/v2/pages/{id}
+    spec: openapi/apa-pages-api-openapi.yml
+  input_schema_source: openapi/apa-pages-api-openapi.yml -> paths./wp/v2/pages/{id}.get.parameters
+  read_only: true
+  consequence: none
+  auth_required: false
+- name: searchContent
+  title: Search across content
+  description: Search across the searchable content types on apacorp.com and return lightweight result records.
+  rest:
+    method: GET
+    path: /wp/v2/search
+    spec: openapi/apa-search-api-openapi.yml
+  input_schema_source: openapi/apa-search-api-openapi.yml -> paths./wp/v2/search.get.parameters
+  read_only: true
+  consequence: none
+  auth_required: false
+- name: listCategories
+  title: List categories
+  description: Retrieve a paginated collection of newsroom categories.
+  rest:
+    method: GET
+    path: /wp/v2/categories
+    spec: openapi/apa-taxonomy-api-openapi.yml
+  input_schema_source: openapi/apa-taxonomy-api-openapi.yml -> paths./wp/v2/categories.get.parameters
+  read_only: true
+  consequence: none
+  auth_required: false
+- name: getCategory
+  title: Retrieve a category
+  description: Retrieve a single category by its numeric identifier.
+  rest:
+    method: GET
+    path: /wp/v2/categories/{id}
+    spec: openapi/apa-taxonomy-api-openapi.yml
+  input_schema_source: openapi/apa-taxonomy-api-openapi.yml -> paths./wp/v2/categories/{id}.get.parameters
+  read_only: true
+  consequence: none
+  auth_required: false
+- name: listTags
+  title: List tags
+  description: Retrieve a paginated collection of newsroom tags.
+  rest:
+    method: GET
+    path: /wp/v2/tags
+    spec: openapi/apa-taxonomy-api-openapi.yml
+  input_schema_source: openapi/apa-taxonomy-api-openapi.yml -> paths./wp/v2/tags.get.parameters
+  read_only: true
+  consequence: none
+  auth_required: false
+- name: getTag
+  title: Retrieve a tag
+  description: Retrieve a single tag by its numeric identifier.
+  rest:
+    method: GET
+    path: /wp/v2/tags/{id}
+    spec: openapi/apa-taxonomy-api-openapi.yml
+  input_schema_source: openapi/apa-taxonomy-api-openapi.yml -> paths./wp/v2/tags/{id}.get.parameters
+  read_only: true
+  consequence: none
+  auth_required: false
+- name: getApaShareQuote
+  title: Retrieve the APA share-price quote
+  description: 'Return the delayed APA Corporation (Nasdaq: APA) share-price quote that drives the ticker rendered across apacorp.com. The route takes no parameters, requires no credentials, sets `Access-Control-Allow-Origin: *`, and is served with `Cache-Control: max-age=600, must-revalidate`, so a caller should expect a value up to ten minutes old.'
+  rest:
+    method: GET
+    path: /apa-ticker/v1/quote
+    spec: openapi/apa-ticker-api-openapi.yml
+  input_schema_source: openapi/apa-ticker-api-openapi.yml -> paths./apa-ticker/v1/quote.get.parameters
+  read_only: true
+  consequence: none
+  auth_required: false
+- name: getTickerNamespaceIndex
+  title: Retrieve the ticker namespace index
+  description: Return the WordPress namespace index for `apa-ticker/v1`, listing the routes registered under it and their supported methods. Self-describing discovery for this namespace.
+  rest:
+    method: GET
+    path: /apa-ticker/v1
+    spec: openapi/apa-ticker-api-openapi.yml
+  input_schema_source: openapi/apa-ticker-api-openapi.yml -> paths./apa-ticker/v1.get.parameters
+  read_only: true
+  consequence: none
+  auth_required: false
+maintainers:
+- FN: Kin Lane
+  email: kin@apievangelist.com

@@ -1,0 +1,35 @@
+generated: '2026-09-14'
+method: generated
+source: openapi/*.yml + conventions/apa-conventions.yml + errors/apa-problem-types.yml in this repository
+provider: APA Corporation
+providerId: apa
+description: 'Packaged Agent Skills for the public APA Corporation REST surface. APA publishes no skills, no AGENTS.md and no developer documentation — these are API Evangelist authored, and every operationId referenced in them was checked against the OpenAPI documents in this repository. Each skill teaches a real flow plus the specific trap that flow hits on this surface: the ten-minute quote cache, the end-of-collection 400, and the site-unique id scoping on the leadership post type.'
+skill_count: 3
+skills:
+- file: skills/apa-read-leadership-roster.md
+  name: apa-read-leadership-roster
+  description: Read APA Corporation's executive and board roster from the custom post type APA registered for it, and handle the id-scoping trap that makes this collection different from stock WordPress.
+  api: APA Corporation Leadership API
+  operations:
+  - listLeadership
+  - getLeadershipProfile
+  - listContentTypes
+- file: skills/apa-read-share-price.md
+  name: apa-read-share-price
+  description: Read APA Corporation's delayed share price from the one endpoint APA built itself, and present it with the staleness the cache actually implies.
+  api: APA Corporation Ticker API
+  operations:
+  - getApaShareQuote
+  - getTickerNamespaceIndex
+- file: skills/apa-track-newsroom.md
+  name: apa-track-newsroom
+  description: Page APA Corporation's newsroom archive correctly, detect new press releases without re-reading the archive, and resolve authors and media in one request instead of three.
+  api: APA Corporation Newsroom API
+  operations:
+  - listNewsroomPosts
+  - getNewsroomPost
+  - listAuthors
+  - searchContent
+maintainers:
+- FN: Kin Lane
+  email: kin@apievangelist.com

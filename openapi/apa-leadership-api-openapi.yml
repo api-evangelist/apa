@@ -1,0 +1,566 @@
+openapi: 3.2.0
+info:
+  title: APA Corporation Leadership API
+  version: wp/v2
+  description: Public, unauthenticated read access to the APA Corporation leadership roster — the `leaderships` custom post type behind apacorp.com, carrying the executive team and board-of-director profiles rendered on the corporate governance pages. Verified live at 25 published entries on 2026-09-14. This is an APA-specific resource registered by the site, not stock WordPress. Anonymous access is read-only.
+  contact:
+    name: APA Corporation
+    url: https://apacorp.com/newsroom/contact-media-relations/
+  x-derived-from: https://apacorp.com/wp-json/ route index + per-route HTTP OPTIONS schema documents
+  x-derived-on: '2026-09-14'
+  x-api-evangelist-note: Third-party profile. APA Corporation publishes no developer program; this documents the anonymously readable WordPress REST content API served from apacorp.com. Every path, parameter and schema here was read from the server's own published OPTIONS documents on 2026-09-14 — nothing is invented.
+  x-verified-volume:
+    published_entries: 25
+    observed: '2026-09-14'
+    header: X-WP-Total
+servers:
+- url: https://apacorp.com/wp-json
+  description: APA Corporation WordPress REST API
+tags:
+- name: Leadership
+  description: APA Corporation executive and board leadership profiles.
+paths:
+  /wp/v2/leaderships:
+    get:
+      operationId: listLeadership
+      summary: List leadership profiles
+      description: Retrieve a paginated collection of published APA Corporation leadership profiles (executives and board members).
+      tags:
+      - Leadership
+      parameters:
+      - name: after
+        in: query
+        schema:
+          type: string
+          format: date-time
+        description: Limit response to posts published after a given ISO8601 compliant date.
+      - name: before
+        in: query
+        schema:
+          type: string
+          format: date-time
+        description: Limit response to posts published before a given ISO8601 compliant date.
+      - name: context
+        in: query
+        schema:
+          type: string
+          enum:
+          - view
+          - embed
+          - edit
+          default: view
+        description: Scope under which the request is made; determines fields present in response.
+      - name: exclude
+        in: query
+        schema:
+          type: array
+          default: []
+          items:
+            type: integer
+        description: Ensure result set excludes specific IDs.
+      - name: include
+        in: query
+        schema:
+          type: array
+          default: []
+          items:
+            type: integer
+        description: Limit result set to specific IDs.
+      - name: modified_after
+        in: query
+        schema:
+          type: string
+          format: date-time
+        description: Limit response to posts modified after a given ISO8601 compliant date.
+      - name: modified_before
+        in: query
+        schema:
+          type: string
+          format: date-time
+        description: Limit response to posts modified before a given ISO8601 compliant date.
+      - name: offset
+        in: query
+        schema:
+          type: integer
+        description: Offset the result set by a specific number of items.
+      - name: order
+        in: query
+        schema:
+          type: string
+          enum:
+          - asc
+          - desc
+          default: desc
+        description: Order sort attribute ascending or descending.
+      - name: orderby
+        in: query
+        schema:
+          type: string
+          enum:
+          - author
+          - date
+          - id
+          - include
+          - modified
+          - parent
+          - relevance
+          - slug
+          - include_slugs
+          - title
+          - rand
+          - menu_order
+          default: date
+        description: Sort collection by post attribute.
+      - name: page
+        in: query
+        schema:
+          type: integer
+          default: 1
+          minimum: 1
+        description: Current page of the collection.
+      - name: per_page
+        in: query
+        schema:
+          type: integer
+          default: 10
+          minimum: 1
+          maximum: 100
+        description: Maximum number of items to be returned in result set.
+      - name: search
+        in: query
+        schema:
+          type: string
+        description: Limit results to those matching a string.
+      - name: search_columns
+        in: query
+        schema:
+          type: array
+          default: []
+          items:
+            enum:
+            - post_title
+            - post_content
+            - post_excerpt
+            type: string
+        description: Array of column names to be searched.
+      - name: search_semantics
+        in: query
+        schema:
+          type: string
+          enum:
+          - exact
+        description: How to interpret the search input.
+      - name: slug
+        in: query
+        schema:
+          type: array
+          items:
+            type: string
+        description: Limit result set to posts with one or more specific slugs.
+      - name: status
+        in: query
+        schema:
+          type: array
+          default: publish
+          items:
+            enum:
+            - publish
+            - future
+            - draft
+            - pending
+            - private
+            - trash
+            - auto-draft
+            - inherit
+            - request-pending
+            - request-confirmed
+            - request-failed
+            - request-completed
+            - acf-disabled
+            - wpra_emergency
+            - wpra_alert
+            - wpra_critical
+            - wpra_error
+            - wpra_warning
+            - wpra_notice
+            - wpra_info
+            - wpra_debug
+            - draft-revision
+            - pending-revision
+            - future-revision
+            - any
+            type: string
+        description: Limit result set to posts assigned one or more statuses.
+      responses:
+        '200':
+          description: A page of results.
+          headers:
+            X-WP-Total:
+              description: Total number of items in the unpaginated collection.
+              schema:
+                type: integer
+            X-WP-TotalPages:
+              description: Total number of pages available at the current `per_page`.
+              schema:
+                type: integer
+            Link:
+              description: RFC 8288 `next` / `prev` pagination links.
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                type: array
+                items: &id001
+                  $ref: '#/components/schemas/Leaderships'
+        '400':
+          description: Invalid parameter. WordPress returns a JSON error envelope with `code`, `message` and `data.status`.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Not authorized for the requested context. Anonymous callers may only use `context=view` or `embed`.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: No resource with that identifier.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /wp/v2/leaderships/{id}:
+    get:
+      operationId: getLeadershipProfile
+      summary: Retrieve a leadership profile
+      description: Retrieve a single published leadership profile by its numeric WordPress identifier.
+      tags:
+      - Leadership
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: Unique numeric identifier for the leadership profile.
+        schema:
+          type: integer
+      - name: after
+        in: query
+        schema:
+          type: string
+          format: date-time
+        description: Limit response to posts published after a given ISO8601 compliant date.
+      - name: before
+        in: query
+        schema:
+          type: string
+          format: date-time
+        description: Limit response to posts published before a given ISO8601 compliant date.
+      - name: context
+        in: query
+        schema:
+          type: string
+          enum:
+          - view
+          - embed
+          - edit
+          default: view
+        description: Scope under which the request is made; determines fields present in response.
+      - name: exclude
+        in: query
+        schema:
+          type: array
+          default: []
+          items:
+            type: integer
+        description: Ensure result set excludes specific IDs.
+      - name: include
+        in: query
+        schema:
+          type: array
+          default: []
+          items:
+            type: integer
+        description: Limit result set to specific IDs.
+      - name: modified_after
+        in: query
+        schema:
+          type: string
+          format: date-time
+        description: Limit response to posts modified after a given ISO8601 compliant date.
+      - name: modified_before
+        in: query
+        schema:
+          type: string
+          format: date-time
+        description: Limit response to posts modified before a given ISO8601 compliant date.
+      - name: offset
+        in: query
+        schema:
+          type: integer
+        description: Offset the result set by a specific number of items.
+      - name: order
+        in: query
+        schema:
+          type: string
+          enum:
+          - asc
+          - desc
+          default: desc
+        description: Order sort attribute ascending or descending.
+      - name: orderby
+        in: query
+        schema:
+          type: string
+          enum:
+          - author
+          - date
+          - id
+          - include
+          - modified
+          - parent
+          - relevance
+          - slug
+          - include_slugs
+          - title
+          - rand
+          - menu_order
+          default: date
+        description: Sort collection by post attribute.
+      - name: page
+        in: query
+        schema:
+          type: integer
+          default: 1
+          minimum: 1
+        description: Current page of the collection.
+      - name: per_page
+        in: query
+        schema:
+          type: integer
+          default: 10
+          minimum: 1
+          maximum: 100
+        description: Maximum number of items to be returned in result set.
+      - name: search
+        in: query
+        schema:
+          type: string
+        description: Limit results to those matching a string.
+      - name: search_columns
+        in: query
+        schema:
+          type: array
+          default: []
+          items:
+            enum:
+            - post_title
+            - post_content
+            - post_excerpt
+            type: string
+        description: Array of column names to be searched.
+      - name: search_semantics
+        in: query
+        schema:
+          type: string
+          enum:
+          - exact
+        description: How to interpret the search input.
+      - name: slug
+        in: query
+        schema:
+          type: array
+          items:
+            type: string
+        description: Limit result set to posts with one or more specific slugs.
+      - name: status
+        in: query
+        schema:
+          type: array
+          default: publish
+          items:
+            enum:
+            - publish
+            - future
+            - draft
+            - pending
+            - private
+            - trash
+            - auto-draft
+            - inherit
+            - request-pending
+            - request-confirmed
+            - request-failed
+            - request-completed
+            - acf-disabled
+            - wpra_emergency
+            - wpra_alert
+            - wpra_critical
+            - wpra_error
+            - wpra_warning
+            - wpra_notice
+            - wpra_info
+            - wpra_debug
+            - draft-revision
+            - pending-revision
+            - future-revision
+            - any
+            type: string
+        description: Limit result set to posts assigned one or more statuses.
+      responses:
+        '200':
+          description: The requested resource.
+          content:
+            application/json:
+              schema: *id001
+        '400':
+          description: Invalid parameter. WordPress returns a JSON error envelope with `code`, `message` and `data.status`.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Not authorized for the requested context. Anonymous callers may only use `context=view` or `embed`.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: No resource with that identifier.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+components:
+  schemas:
+    Error:
+      type: object
+      title: Error
+      description: WordPress REST API error envelope. Not RFC 9457 problem+json.
+      properties:
+        code:
+          type: string
+          description: Machine-readable WordPress error code, e.g. `rest_post_invalid_id`.
+        message:
+          type: string
+          description: Human-readable error message.
+        data:
+          type: object
+          description: Error data; carries the HTTP `status`.
+          properties:
+            status:
+              type: integer
+      required:
+      - code
+      - message
+    Leaderships:
+      type: object
+      properties:
+        date:
+          type: string
+          description: The date the post was published, in the site's timezone.
+          format: date-time
+        date_gmt:
+          type: string
+          description: The date the post was published, as GMT.
+          format: date-time
+        guid:
+          type: object
+          description: The globally unique identifier for the post.
+          readOnly: true
+          properties:
+            raw:
+              type: string
+            rendered:
+              type: string
+        id:
+          type: integer
+          description: Unique identifier for the post.
+          readOnly: true
+        link:
+          type: string
+          description: URL to the post.
+          format: uri
+          readOnly: true
+        modified:
+          type: string
+          description: The date the post was last modified, in the site's timezone.
+          format: date-time
+          readOnly: true
+        modified_gmt:
+          type: string
+          description: The date the post was last modified, as GMT.
+          format: date-time
+          readOnly: true
+        slug:
+          type: string
+          description: An alphanumeric identifier for the post unique to its type.
+        status:
+          type: string
+          description: A named status for the post.
+          enum:
+          - publish
+          - future
+          - draft
+          - pending
+          - private
+          - acf-disabled
+          - wpra_emergency
+          - wpra_alert
+          - wpra_critical
+          - wpra_error
+          - wpra_warning
+          - wpra_notice
+          - wpra_info
+          - wpra_debug
+          - draft-revision
+          - pending-revision
+          - future-revision
+        type:
+          type: string
+          description: Type of post.
+          readOnly: true
+        class_list:
+          type: array
+          description: An array of the class names for the post container element.
+          readOnly: true
+          items:
+            type: string
+        title:
+          type: object
+          description: The title for the post.
+          properties:
+            raw:
+              type: string
+            rendered:
+              type: string
+        content:
+          type: object
+          description: The content for the post.
+          properties:
+            raw:
+              type: string
+            rendered:
+              type: string
+            block_version:
+              type: integer
+            protected:
+              type: boolean
+        template:
+          type: string
+          description: The theme file to use to display the post.
+        acf:
+          type: object
+          description: ACF field data
+        publishpress_future_workflow_manual_trigger:
+          type: object
+          description: Workflow Manual Trigger
+  securitySchemes:
+    applicationPassword:
+      type: http
+      scheme: basic
+      description: 'WordPress application passwords. The site''s own root discovery document at https://apacorp.com/wp-json/ publishes this as its only authentication method, with the authorization endpoint at https://apacorp.com/wp-admin/authorize-application.php. Credentials are a WordPress username plus an application password sent as HTTP Basic. It is NOT required for anything documented here: every operation in this spec was verified to answer anonymously on 2026-09-14. An authenticated caller additionally unlocks context=edit fields and the write methods, which are out of scope for this public profile.'
+security:
+- {}
+- applicationPassword: []

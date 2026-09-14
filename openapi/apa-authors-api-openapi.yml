@@ -1,0 +1,477 @@
+openapi: 3.2.0
+info:
+  title: APA Corporation Authors API
+  version: wp/v2
+  description: Public, unauthenticated read access to the authors credited on APA Corporation newsroom posts. Verified live at 5 public authors on 2026-09-14. WordPress exposes only the public author view anonymously — name, slug, description, avatar and archive link; email and role require authentication. Anonymous access is read-only.
+  contact:
+    name: APA Corporation
+    url: https://apacorp.com/newsroom/contact-media-relations/
+  x-derived-from: https://apacorp.com/wp-json/ route index + per-route HTTP OPTIONS schema documents
+  x-derived-on: '2026-09-14'
+  x-api-evangelist-note: Third-party profile. APA Corporation publishes no developer program; this documents the anonymously readable WordPress REST content API served from apacorp.com. Every path, parameter and schema here was read from the server's own published OPTIONS documents on 2026-09-14 — nothing is invented.
+  x-verified-volume:
+    public_authors: 5
+    observed: '2026-09-14'
+    header: X-WP-Total
+servers:
+- url: https://apacorp.com/wp-json
+  description: APA Corporation WordPress REST API
+tags:
+- name: Authors
+  description: Public author records credited on APA newsroom content.
+paths:
+  /wp/v2/users:
+    get:
+      operationId: listAuthors
+      summary: List authors
+      description: Retrieve a paginated collection of authors who have published newsroom content.
+      tags:
+      - Authors
+      parameters:
+      - name: capabilities
+        in: query
+        schema:
+          type: array
+          items:
+            type: string
+        description: Limit result set to users matching at least one specific capability provided. Accepts csv list or single capability.
+      - name: context
+        in: query
+        schema:
+          type: string
+          enum:
+          - view
+          - embed
+          - edit
+          default: view
+        description: Scope under which the request is made; determines fields present in response.
+      - name: exclude
+        in: query
+        schema:
+          type: array
+          default: []
+          items:
+            type: integer
+        description: Ensure result set excludes specific IDs.
+      - name: has_published_posts
+        in: query
+        schema:
+          type: boolean
+          items:
+            type: string
+            enum:
+              post: post
+              page: page
+              attachment: attachment
+              nav_menu_item: nav_menu_item
+              wp_block: wp_block
+              wp_template: wp_template
+              wp_template_part: wp_template_part
+              wp_global_styles: wp_global_styles
+              wp_navigation: wp_navigation
+              wp_font_family: wp_font_family
+              wp_font_face: wp_font_face
+              e-floating-buttons: e-floating-buttons
+              elementor_library: elementor_library
+              leaderships: leaderships
+              pp_video_block: pp_video_block
+              visualizer: visualizer
+              popup: popup
+              popup_theme: popup_theme
+              pum_cta: pum_cta
+              spectra-popup: spectra-popup
+              wprss_feed_item: wprss_feed_item
+              pp_email_submission: pp_email_submission
+        description: Limit result set to users who have published posts.
+      - name: include
+        in: query
+        schema:
+          type: array
+          default: []
+          items:
+            type: integer
+        description: Limit result set to specific IDs.
+      - name: offset
+        in: query
+        schema:
+          type: integer
+        description: Offset the result set by a specific number of items.
+      - name: order
+        in: query
+        schema:
+          type: string
+          enum:
+          - asc
+          - desc
+          default: asc
+        description: Order sort attribute ascending or descending.
+      - name: orderby
+        in: query
+        schema:
+          type: string
+          enum:
+          - id
+          - include
+          - name
+          - registered_date
+          - slug
+          - include_slugs
+          - email
+          - url
+          default: name
+        description: Sort collection by user attribute.
+      - name: page
+        in: query
+        schema:
+          type: integer
+          default: 1
+          minimum: 1
+        description: Current page of the collection.
+      - name: per_page
+        in: query
+        schema:
+          type: integer
+          default: 10
+          minimum: 1
+          maximum: 100
+        description: Maximum number of items to be returned in result set.
+      - name: roles
+        in: query
+        schema:
+          type: array
+          items:
+            type: string
+        description: Limit result set to users matching at least one specific role provided. Accepts csv list or single role.
+      - name: search
+        in: query
+        schema:
+          type: string
+        description: Limit results to those matching a string.
+      - name: search_columns
+        in: query
+        schema:
+          type: array
+          default: []
+          items:
+            enum:
+            - email
+            - name
+            - id
+            - username
+            - slug
+            type: string
+        description: Array of column names to be searched.
+      - name: slug
+        in: query
+        schema:
+          type: array
+          items:
+            type: string
+        description: Limit result set to users with one or more specific slugs.
+      - name: who
+        in: query
+        schema:
+          type: string
+          enum:
+          - authors
+        description: Limit result set to users who are considered authors.
+      responses:
+        '200':
+          description: A page of results.
+          headers:
+            X-WP-Total:
+              description: Total number of items in the unpaginated collection.
+              schema:
+                type: integer
+            X-WP-TotalPages:
+              description: Total number of pages available at the current `per_page`.
+              schema:
+                type: integer
+            Link:
+              description: RFC 8288 `next` / `prev` pagination links.
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                type: array
+                items: &id001
+                  $ref: '#/components/schemas/User'
+        '400':
+          description: Invalid parameter. WordPress returns a JSON error envelope with `code`, `message` and `data.status`.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Not authorized for the requested context. Anonymous callers may only use `context=view` or `embed`.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: No resource with that identifier.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /wp/v2/users/{id}:
+    get:
+      operationId: getAuthor
+      summary: Retrieve an author
+      description: Retrieve a single public author record by numeric identifier.
+      tags:
+      - Authors
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: Unique numeric identifier for the author.
+        schema:
+          type: integer
+      - name: capabilities
+        in: query
+        schema:
+          type: array
+          items:
+            type: string
+        description: Limit result set to users matching at least one specific capability provided. Accepts csv list or single capability.
+      - name: context
+        in: query
+        schema:
+          type: string
+          enum:
+          - view
+          - embed
+          - edit
+          default: view
+        description: Scope under which the request is made; determines fields present in response.
+      - name: exclude
+        in: query
+        schema:
+          type: array
+          default: []
+          items:
+            type: integer
+        description: Ensure result set excludes specific IDs.
+      - name: has_published_posts
+        in: query
+        schema:
+          type: boolean
+          items:
+            type: string
+            enum:
+              post: post
+              page: page
+              attachment: attachment
+              nav_menu_item: nav_menu_item
+              wp_block: wp_block
+              wp_template: wp_template
+              wp_template_part: wp_template_part
+              wp_global_styles: wp_global_styles
+              wp_navigation: wp_navigation
+              wp_font_family: wp_font_family
+              wp_font_face: wp_font_face
+              e-floating-buttons: e-floating-buttons
+              elementor_library: elementor_library
+              leaderships: leaderships
+              pp_video_block: pp_video_block
+              visualizer: visualizer
+              popup: popup
+              popup_theme: popup_theme
+              pum_cta: pum_cta
+              spectra-popup: spectra-popup
+              wprss_feed_item: wprss_feed_item
+              pp_email_submission: pp_email_submission
+        description: Limit result set to users who have published posts.
+      - name: include
+        in: query
+        schema:
+          type: array
+          default: []
+          items:
+            type: integer
+        description: Limit result set to specific IDs.
+      - name: offset
+        in: query
+        schema:
+          type: integer
+        description: Offset the result set by a specific number of items.
+      - name: order
+        in: query
+        schema:
+          type: string
+          enum:
+          - asc
+          - desc
+          default: asc
+        description: Order sort attribute ascending or descending.
+      - name: orderby
+        in: query
+        schema:
+          type: string
+          enum:
+          - id
+          - include
+          - name
+          - registered_date
+          - slug
+          - include_slugs
+          - email
+          - url
+          default: name
+        description: Sort collection by user attribute.
+      - name: page
+        in: query
+        schema:
+          type: integer
+          default: 1
+          minimum: 1
+        description: Current page of the collection.
+      - name: per_page
+        in: query
+        schema:
+          type: integer
+          default: 10
+          minimum: 1
+          maximum: 100
+        description: Maximum number of items to be returned in result set.
+      - name: roles
+        in: query
+        schema:
+          type: array
+          items:
+            type: string
+        description: Limit result set to users matching at least one specific role provided. Accepts csv list or single role.
+      - name: search
+        in: query
+        schema:
+          type: string
+        description: Limit results to those matching a string.
+      - name: search_columns
+        in: query
+        schema:
+          type: array
+          default: []
+          items:
+            enum:
+            - email
+            - name
+            - id
+            - username
+            - slug
+            type: string
+        description: Array of column names to be searched.
+      - name: slug
+        in: query
+        schema:
+          type: array
+          items:
+            type: string
+        description: Limit result set to users with one or more specific slugs.
+      - name: who
+        in: query
+        schema:
+          type: string
+          enum:
+          - authors
+        description: Limit result set to users who are considered authors.
+      responses:
+        '200':
+          description: The requested resource.
+          content:
+            application/json:
+              schema: *id001
+        '400':
+          description: Invalid parameter. WordPress returns a JSON error envelope with `code`, `message` and `data.status`.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Not authorized for the requested context. Anonymous callers may only use `context=view` or `embed`.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: No resource with that identifier.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+components:
+  schemas:
+    Error:
+      type: object
+      title: Error
+      description: WordPress REST API error envelope. Not RFC 9457 problem+json.
+      properties:
+        code:
+          type: string
+          description: Machine-readable WordPress error code, e.g. `rest_post_invalid_id`.
+        message:
+          type: string
+          description: Human-readable error message.
+        data:
+          type: object
+          description: Error data; carries the HTTP `status`.
+          properties:
+            status:
+              type: integer
+      required:
+      - code
+      - message
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: Unique identifier for the user.
+          readOnly: true
+        name:
+          type: string
+          description: Display name for the user.
+        url:
+          type: string
+          description: URL of the user.
+          format: uri
+        description:
+          type: string
+          description: Description of the user.
+        link:
+          type: string
+          description: Author URL of the user.
+          format: uri
+          readOnly: true
+        slug:
+          type: string
+          description: An alphanumeric identifier for the user.
+        password:
+          type: string
+          description: Password for the user (never included).
+        meta:
+          type: object
+          description: Meta fields.
+          properties:
+            persisted_preferences:
+              type: object
+            generateblocks_onboarding:
+              type: object
+        acf:
+          type: object
+          description: ACF field data
+        elementor_introduction:
+          type: object
+          description: Elementor user meta data
+          properties:
+            ai_get_started:
+              type: boolean
+  securitySchemes:
+    applicationPassword:
+      type: http
+      scheme: basic
+      description: 'WordPress application passwords. The site''s own root discovery document at https://apacorp.com/wp-json/ publishes this as its only authentication method, with the authorization endpoint at https://apacorp.com/wp-admin/authorize-application.php. Credentials are a WordPress username plus an application password sent as HTTP Basic. It is NOT required for anything documented here: every operation in this spec was verified to answer anonymously on 2026-09-14. An authenticated caller additionally unlocks context=edit fields and the write methods, which are out of scope for this public profile.'
+security:
+- {}
+- applicationPassword: []

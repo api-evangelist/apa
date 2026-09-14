@@ -1,0 +1,98 @@
+generated: '2026-09-14'
+method: probed
+source: live error responses provoked against https://apacorp.com/wp-json on 2026-09-14
+provider: APA Corporation
+providerId: apa
+description: >-
+  Error catalogue for the APA Corporation REST surface. Every entry below was provoked against the
+  live host on 2026-09-14 and the code, message and status are the server's own verbatim response —
+  none of it is copied from WordPress documentation. The envelope is the WordPress REST shape, not
+  RFC 9457: there is no type URI, no title and no instance, so an agent must key on `code` rather
+  than on a problem type.
+format: wordpress-rest
+rfc9457: false
+media_type: application/json
+envelope:
+  fields:
+    - name: code
+      type: string
+      description: Machine-readable error identifier. This is the field to branch on.
+    - name: message
+      type: string
+      description: Human-readable message, localised to the site language (en-US here).
+    - name: data
+      type: object
+      description: Error data. Always carries `status` (the HTTP status repeated in the body); on validation failures it also carries `params` and `details` keyed by the offending parameter.
+  example:
+    code: rest_post_invalid_id
+    message: Invalid post ID.
+    data:
+      status: 404
+problem_types:
+  - code: rest_post_invalid_id
+    status: 404
+    title: Invalid post ID
+    message: Invalid post ID.
+    observed_at: GET /wp/v2/posts/99999999 and GET /wp/v2/leaderships/1
+    cause: >-
+      The numeric identifier does not resolve to a published item of that post type. Note the second
+      observation — id 1 is a real WordPress id but not a `leaderships` item, so this code also means
+      "right id, wrong collection", not only "no such record".
+    remediation: List the collection first and use an id returned by it. Do not assume ids are shared across post types.
+  - code: rest_no_route
+    status: 404
+    title: No route found
+    message: No route was found matching the URL and request method.
+    observed_at: GET /wp/v2/nonexistent and GET /apa-ticker/v1/nope
+    cause: The path is not a registered REST route, or the route exists but not for this HTTP method.
+    remediation: Read https://apacorp.com/wp-json/ (the route index) or the Discovery API and use a registered route.
+  - code: rest_invalid_param
+    status: 400
+    title: Invalid parameter
+    message: 'Invalid parameter(s): per_page'
+    observed_at: GET /wp/v2/posts?per_page=500
+    cause: >-
+      A query parameter failed the server's own OPTIONS argument schema. The response carries
+      data.params and data.details keyed by parameter name with the exact constraint that failed —
+      observed verbatim: "per_page must be between 1 (inclusive) and 100 (inclusive)".
+    remediation: >-
+      Respect the bounds published in the OPTIONS document for the route. per_page is capped at 100,
+      so paging the 1,209-item media collection takes at least 13 requests.
+  - code: rest_post_invalid_page_number
+    status: 400
+    title: Page number out of range
+    message: The page number requested is larger than the number of pages available.
+    observed_at: GET /wp/v2/posts?page=9999
+    cause: Pagination ran past the end of the collection.
+    remediation: Read X-WP-TotalPages from the first response and stop there, or follow the RFC 8288 Link rel="next" until it is absent.
+  - code: rest_forbidden_context
+    status: 401
+    title: Context not permitted
+    message: Sorry, you are not allowed to edit posts in this post type.
+    observed_at: GET /wp/v2/posts?context=edit and GET /wp/v2/users?context=edit
+    cause: >-
+      An anonymous caller requested the `edit` projection. Only `view` and `embed` are available
+      without a WordPress application password.
+    remediation: Use context=view (the default) or context=embed. The edit projection is not obtainable by a third party on this site.
+  - code: rest_cannot_view
+    status: 401
+    title: Collection not readable anonymously
+    message: Sorry, you are not allowed to view menus.
+    observed_at: GET /wp/v2/menus
+    cause: >-
+      The route is registered and appears in the public route index, but its read permission
+      requires authentication. /wp/v2/menus is the one collection found in this state on this site.
+    remediation: >-
+      Do not treat presence in the route index as readability. This repository deliberately omits
+      /wp/v2/menus from its OpenAPIs for that reason.
+not_observed:
+  - status: 429
+    note: >-
+      No throttled response was observed and no rate-limit header is returned. An unpublished
+      Cloudflare or WP Engine edge limit is likely, but its code and body are unknown and are not
+      guessed here.
+  - status: 5xx
+    note: No server error was observed during profiling on 2026-09-14.
+maintainers:
+  - FN: Kin Lane
+    email: kin@apievangelist.com

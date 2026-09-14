@@ -1,0 +1,243 @@
+openapi: 3.2.0
+info:
+  title: APA Corporation Discovery API
+  version: wp/v2
+  description: 'Self-describing metadata for the apacorp.com REST surface: the content types, taxonomies and post statuses the site registers. This is the route a caller reads first — it is what reveals that APA registers four resources of its own (`leaderships`, `presto-videos`, `visualizer`, `wprss_feed_item`) alongside stock WordPress, and it is the machine-readable index the rest of this profile was derived from. Public, unauthenticated, read-only.'
+  contact:
+    name: APA Corporation
+    url: https://apacorp.com/newsroom/contact-media-relations/
+  x-derived-from: https://apacorp.com/wp-json/ route index + per-route HTTP OPTIONS schema documents
+  x-derived-on: '2026-09-14'
+  x-api-evangelist-note: Third-party profile. APA Corporation publishes no developer program; this documents the anonymously readable WordPress REST content API served from apacorp.com. Every path, parameter and schema here was read from the server's own published OPTIONS documents, or from an observed live response, on 2026-09-14 — nothing is invented.
+servers:
+- url: https://apacorp.com/wp-json
+  description: APA Corporation WordPress REST API
+tags:
+- name: Discovery
+  description: Self-describing registration metadata for the apacorp.com REST surface.
+paths:
+  /wp/v2/types:
+    get:
+      operationId: listContentTypes
+      summary: List registered content types
+      description: Return every content type registered on apacorp.com, keyed by slug, with its REST base and namespace. This is how a caller discovers the APA-specific resources — `leaderships`, `presto-videos`, `visualizer`, `wprss_feed_item` — that are not part of stock WordPress.
+      tags:
+      - Discovery
+      parameters:
+      - name: context
+        in: query
+        schema:
+          type: string
+          enum:
+          - view
+          - embed
+          - edit
+          default: view
+        description: Scope under which the request is made; determines fields present in response.
+      responses:
+        '200':
+          description: A map keyed by slug.
+          content:
+            application/json:
+              schema:
+                type: object
+                description: Return every content type registered on apacorp.com, keyed by slug, with its REST base and namespace. This is how a caller discovers the APA-specific resources — `leaderships`, `presto-videos`, `visualizer`, `wprss_feed_item` — that are not part of stock WordPress.
+                additionalProperties:
+                  type: object
+        '404': &id001
+          description: No such resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /wp/v2/taxonomies:
+    get:
+      operationId: listTaxonomies
+      summary: List registered taxonomies
+      description: Return every taxonomy registered on apacorp.com, keyed by slug, with the content types it applies to and its REST base.
+      tags:
+      - Discovery
+      parameters:
+      - name: context
+        in: query
+        schema:
+          type: string
+          enum:
+          - view
+          - embed
+          - edit
+          default: view
+        description: Scope under which the request is made; determines fields present in response.
+      - name: type
+        in: query
+        schema:
+          type: string
+        description: Limit results to taxonomies associated with a specific post type.
+      responses:
+        '200':
+          description: A map keyed by slug.
+          content:
+            application/json:
+              schema:
+                type: object
+                description: Return every taxonomy registered on apacorp.com, keyed by slug, with the content types it applies to and its REST base.
+                additionalProperties:
+                  type: object
+        '404': *id001
+  /wp/v2/statuses:
+    get:
+      operationId: listPostStatuses
+      summary: List post statuses
+      description: Return every post status registered on apacorp.com, keyed by slug. Anonymous callers only ever see `publish`.
+      tags:
+      - Discovery
+      parameters:
+      - name: context
+        in: query
+        schema:
+          type: string
+          enum:
+          - view
+          - embed
+          - edit
+          default: view
+        description: Scope under which the request is made; determines fields present in response.
+      responses:
+        '200':
+          description: A map keyed by slug.
+          content:
+            application/json:
+              schema:
+                type: object
+                description: Return every post status registered on apacorp.com, keyed by slug. Anonymous callers only ever see `publish`.
+                additionalProperties:
+                  type: object
+        '404': *id001
+  /wp/v2/types/{type}:
+    get:
+      operationId: getContentType
+      summary: Retrieve a content type
+      description: Return the registration record for a single content type, including its REST base, namespace, hierarchy and supported features.
+      tags:
+      - Discovery
+      parameters:
+      - name: type
+        in: path
+        required: true
+        description: Slug of the content type, e.g. `leaderships`.
+        schema:
+          type: string
+      - name: context
+        in: query
+        schema:
+          type: string
+          enum:
+          - view
+          - embed
+          - edit
+          default: view
+        description: Scope under which the request is made; determines fields present in response.
+      responses:
+        '200':
+          description: The registration record.
+          content:
+            application/json:
+              schema:
+                type: object
+        '404': *id001
+  /wp/v2/taxonomies/{taxonomy}:
+    get:
+      operationId: getTaxonomy
+      summary: Retrieve a taxonomy
+      description: Return the registration record for a single taxonomy.
+      tags:
+      - Discovery
+      parameters:
+      - name: taxonomy
+        in: path
+        required: true
+        description: Slug of the taxonomy, e.g. `category`.
+        schema:
+          type: string
+      - name: context
+        in: query
+        schema:
+          type: string
+          enum:
+          - view
+          - embed
+          - edit
+          default: view
+        description: Scope under which the request is made; determines fields present in response.
+      - name: type
+        in: query
+        schema:
+          type: string
+        description: Limit results to taxonomies associated with a specific post type.
+      responses:
+        '200':
+          description: The registration record.
+          content:
+            application/json:
+              schema:
+                type: object
+        '404': *id001
+  /wp/v2/statuses/{status}:
+    get:
+      operationId: getPostStatus
+      summary: Retrieve a post status
+      description: Return the registration record for a single post status.
+      tags:
+      - Discovery
+      parameters:
+      - name: status
+        in: path
+        required: true
+        description: Slug of the post status, e.g. `publish`.
+        schema:
+          type: string
+      - name: context
+        in: query
+        schema:
+          type: string
+          enum:
+          - view
+          - embed
+          - edit
+          default: view
+        description: Scope under which the request is made; determines fields present in response.
+      responses:
+        '200':
+          description: The registration record.
+          content:
+            application/json:
+              schema:
+                type: object
+        '404': *id001
+components:
+  schemas:
+    Error:
+      type: object
+      title: Error
+      description: WordPress REST API error envelope. Not RFC 9457 problem+json.
+      properties:
+        code:
+          type: string
+        message:
+          type: string
+        data:
+          type: object
+          properties:
+            status:
+              type: integer
+      required:
+      - code
+      - message
+  securitySchemes:
+    applicationPassword:
+      type: http
+      scheme: basic
+      description: 'WordPress application passwords. The site''s own root discovery document at https://apacorp.com/wp-json/ publishes this as its only authentication method, with the authorization endpoint at https://apacorp.com/wp-admin/authorize-application.php. Credentials are a WordPress username plus an application password sent as HTTP Basic. It is NOT required for anything documented here: every operation in this spec was verified to answer anonymously on 2026-09-14. An authenticated caller additionally unlocks context=edit fields and the write methods, which are out of scope for this public profile.'
+security:
+- {}
+- applicationPassword: []

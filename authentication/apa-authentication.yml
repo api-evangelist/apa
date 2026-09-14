@@ -1,0 +1,90 @@
+generated: '2026-09-14'
+method: probed
+source: https://apacorp.com/wp-json/ (the site's own root discovery document) + live anonymous calls to every documented operation
+provider: APA Corporation
+providerId: apa
+description: >-
+  Authentication profile for the APA Corporation REST surface at https://apacorp.com/wp-json. The
+  headline fact is that there is none to obtain: every operation profiled in this repository was
+  called anonymously on 2026-09-14 and answered 200 with real data. APA publishes no developer
+  program, no API keys, no sign-up, no OAuth. The only credential the surface knows about is the
+  WordPress application password, which the site's own root document advertises, and which is needed
+  only for the write methods and the context=edit projection that are deliberately out of scope here.
+summary:
+  public_read: true
+  credential_required_for_documented_operations: false
+  signup_url: null
+  developer_program: false
+  schemes_declared: 1
+schemes:
+  - id: anonymous
+    type: none
+    label: Anonymous public read
+    description: >-
+      The default and only mode needed for the 28 operations documented in this repository. No
+      Authorization header, no cookie, no nonce. The server sets Access-Control-Allow-Origin "*"
+      and Access-Control-Allow-Methods "GET" on these routes, so a browser on any origin can call
+      them directly.
+    applies_to:
+      - openapi/apa-ticker-api-openapi.yml
+      - openapi/apa-newsroom-api-openapi.yml
+      - openapi/apa-leadership-api-openapi.yml
+      - openapi/apa-pages-api-openapi.yml
+      - openapi/apa-media-hub-api-openapi.yml
+      - openapi/apa-feed-items-api-openapi.yml
+      - openapi/apa-taxonomy-api-openapi.yml
+      - openapi/apa-authors-api-openapi.yml
+      - openapi/apa-search-api-openapi.yml
+      - openapi/apa-oembed-api-openapi.yml
+      - openapi/apa-discovery-api-openapi.yml
+    verified:
+      method: live anonymous GET
+      date: '2026-09-14'
+      evidence: >-
+        GET https://apacorp.com/wp-json/apa-ticker/v1/quote returned 200 application/json with no
+        credentials; GET /wp/v2/posts returned 200 with X-WP-Total 51; GET /wp/v2/leaderships returned
+        200 with X-WP-Total 25.
+  - id: application-password
+    type: http
+    scheme: basic
+    label: WordPress application password
+    description: >-
+      HTTP Basic with a WordPress username and an application password. This is not an API-product
+      credential — it is the WordPress account mechanism, issued from the site's own admin, and it
+      exists for editors rather than for integrators. It unlocks the write methods and the
+      context=edit field projection. No public route to obtain one exists for a third party.
+    authorization_endpoint: https://apacorp.com/wp-admin/authorize-application.php
+    source: >-
+      Declared verbatim by the provider at https://apacorp.com/wp-json/ under the top-level
+      "authentication" key: {"application-passwords": {"endpoints": {"authorization":
+      "https://apacorp.com/wp-admin/authorize-application.php"}}}
+    required_for_documented_operations: false
+    obtainable_by_third_party: false
+not_present:
+  - id: oauth2
+    note: No OAuth 2.0 surface. /.well-known/oauth-authorization-server returns 404 on apacorp.com and www.apacorp.com.
+  - id: oidc
+    note: No OpenID Connect surface. /.well-known/openid-configuration returns 404 on apacorp.com and www.apacorp.com.
+  - id: api-key
+    note: No API key issuance. There is no developer portal, no key management page and no sign-up.
+  - id: mtls
+    note: No mutual-TLS surface advertised or observed.
+access_boundaries:
+  - boundary: context=edit
+    status: 401
+    code: rest_forbidden_context
+    note: Anonymous callers may request context=view or context=embed only.
+  - boundary: /wp/v2/menus
+    status: 401
+    code: rest_cannot_view
+    note: >-
+      Observed live on 2026-09-14 — "Sorry, you are not allowed to view menus." This route is
+      registered but not anonymously readable, and is deliberately excluded from the OpenAPIs here.
+  - boundary: write methods
+    status: 401
+    note: >-
+      POST, PUT, PATCH and DELETE exist on the wp/v2 routes but require an application password.
+      Nothing in this repository documents them; the public contract is read-only.
+maintainers:
+  - FN: Kin Lane
+    email: kin@apievangelist.com

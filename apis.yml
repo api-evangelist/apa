@@ -1,11 +1,9 @@
 aid: apa
 name: APA Corporation
-description: >-
-  APA Corporation is an independent energy company that explores for, develops,
-  and produces natural gas, crude oil, and natural gas liquids, with operations
-  in the United States, Egypt, the United Kingdom, and Suriname. Organized in
-  Delaware and headquartered in Houston, Texas, APA is listed on Nasdaq (APA)
-  and listed on Nasdaq Texas since March 2026.
+description: APA Corporation is an independent energy company that explores for, develops, and produces
+  natural gas, crude oil, and natural gas liquids, with operations in the United States, Egypt, the United
+  Kingdom, and Suriname. Organized in Delaware and headquartered in Houston, Texas, APA is listed on Nasdaq
+  (APA) and listed on Nasdaq Texas since March 2026.
 type: Index
 deliveryModel:
   model: unknown
@@ -32,95 +30,456 @@ accessModel:
   method: derived
 image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/icons/apa.png
 tags:
+- Oil and Gas
+- Energy
+- Exploration
+- Production
+- WordPress
+- REST
+- Content
+- Newsroom
+- Investor Relations
+- Energy Production
+tags_raw:
+- Oil And Gas
+- Energy
+- Exploration
+- Production
+- WordPress
+- REST
+- Content
+- Newsroom
+- Investor Relations
+- Energy Production
+url: https://raw.githubusercontent.com/api-evangelist/apa/refs/heads/main/apis.yml
+created: '2026-03-21'
+modified: '2026-09-14'
+specificationVersion: '0.23'
+apis:
+- aid: apa:apa-corporation
+  name: APA Corporation
+  description: 'APA Corporation''s own corporate web surface at apacorp.com, exposed as a public, unauthenticated
+    WordPress REST API at https://apacorp.com/wp-json. This entry covers the self-describing root: the
+    namespace index and the content-type, taxonomy and post-status registration records that reveal what
+    the rest of the surface holds. APA registers four resources of its own on top of stock WordPress —
+    leaderships, presto-videos, visualizer and wprss_feed_item — plus one custom namespace, apa-ticker/v1.
+    Verified live on 2026-09-14 with 631 registered routes across 49 namespaces.'
+  humanURL: https://apacorp.com
+  tags:
   - Oil and Gas
   - Energy
   - Exploration
   - Production
-tags_raw:
+  tags_raw:
   - Oil And Gas
   - Energy
   - Exploration
   - Production
-url: >-
-  https://raw.githubusercontent.com/api-evangelist/apa/refs/heads/main/apis.yml
-created: '2026-03-21'
-modified: '2026-04-19'
-specificationVersion: '0.23'
-apis:
-  - aid: apa:apa-corporation
-    name: APA Corporation
-    description: >-
-      APA Corporation explores for and produces oil and natural gas in the
-      United States, Egypt, the United Kingdom, and Suriname through its
-      Apache Corporation and APA Suriname subsidiaries.
-    humanURL: https://apacorp.com
-    tags:
-      - Oil and Gas
-      - Energy
-      - Exploration
-      - Production
-    tags_raw:
-      - Oil And Gas
-      - Energy
-      - Exploration
-      - Production
-    properties:
-      - type: Documentation
-        url: https://apacorp.com
-      - type: GettingStarted
-        url: https://investor.apacorp.com
+  properties:
+  - type: OpenAPI
+    url: openapi/apa-discovery-api-openapi.yml
+  - type: Overlay
+    url: overlays/apa-discovery-api-overlay.yaml
+  - type: Authentication
+    url: authentication/apa-authentication.yml
+  - type: Conventions
+    url: conventions/apa-conventions.yml
+  - type: ErrorCatalog
+    url: errors/apa-problem-types.yml
+  - type: Examples
+    url: examples/apa-discovery-types.json
+  baseURL: https://apacorp.com/wp-json
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/icons/apa.png
+- aid: apa:apa-ticker-api
+  name: APA Corporation Ticker API
+  description: 'The one route on apacorp.com that APA Corporation registered itself rather than inheriting
+    from WordPress or a plugin: apa-ticker/v1, a public, unauthenticated, CORS-open JSON endpoint returning
+    the delayed APA (Nasdaq: APA) share-price quote that drives the ticker on the corporate site. Verified
+    live on 2026-09-14 returning symbol, price, change, percent, is_up and source (nasdaq), cached for
+    ten minutes.'
+  humanURL: https://apacorp.com/wp-json/
+  baseURL: https://apacorp.com/wp-json
+  tags:
+  - Oil and Gas
+  - Energy
+  - Exploration
+  - Production
+  - Stock Quote
+  - Investor Relations
+  - Ticker
+  properties:
+  - type: OpenAPI
+    url: openapi/apa-ticker-api-openapi.yml
+  - type: Overlay
+    url: overlays/apa-ticker-api-overlay.yaml
+  - type: Authentication
+    url: authentication/apa-authentication.yml
+  - type: Conventions
+    url: conventions/apa-conventions.yml
+  - type: ErrorCatalog
+    url: errors/apa-problem-types.yml
+  - type: RateLimits
+    url: rate-limits/apa-rate-limits.yml
+  - type: Examples
+    url: examples/apa-ticker-quote.json
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/icons/apa.png
+- aid: apa:apa-newsroom-api
+  name: APA Corporation Newsroom API
+  description: Public, unauthenticated read access to the APA Corporation newsroom archive — press releases,
+    community stories and operational updates published at apacorp.com. Verified live at 51 published
+    posts on 2026-09-14, filterable by date, author, category and free-text search, with RFC 8288 Link
+    pagination and X-WP-Total counts.
+  humanURL: https://apacorp.com/wp-json/
+  baseURL: https://apacorp.com/wp-json
+  tags:
+  - Oil and Gas
+  - Energy
+  - Exploration
+  - Production
+  - Newsroom
+  - Press Releases
+  - Content
+  properties:
+  - type: OpenAPI
+    url: openapi/apa-newsroom-api-openapi.yml
+  - type: Overlay
+    url: overlays/apa-newsroom-api-overlay.yaml
+  - type: Authentication
+    url: authentication/apa-authentication.yml
+  - type: Conventions
+    url: conventions/apa-conventions.yml
+  - type: ErrorCatalog
+    url: errors/apa-problem-types.yml
+  - type: RateLimits
+    url: rate-limits/apa-rate-limits.yml
+  - type: Examples
+    url: examples/apa-newsroom-posts.json
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/icons/apa.png
+- aid: apa:apa-leadership-api
+  name: APA Corporation Leadership API
+  description: Public, unauthenticated read access to the APA Corporation leadership roster — the leaderships
+    custom post type carrying executive team and board-of-director profiles rendered on the corporate
+    governance pages. Verified live at 25 published entries on 2026-09-14. This is an APA-registered resource,
+    not stock WordPress.
+  humanURL: https://apacorp.com/wp-json/
+  baseURL: https://apacorp.com/wp-json
+  tags:
+  - Oil and Gas
+  - Energy
+  - Exploration
+  - Production
+  - Leadership
+  - Governance
+  - Corporate
+  properties:
+  - type: OpenAPI
+    url: openapi/apa-leadership-api-openapi.yml
+  - type: Overlay
+    url: overlays/apa-leadership-api-overlay.yaml
+  - type: Authentication
+    url: authentication/apa-authentication.yml
+  - type: Conventions
+    url: conventions/apa-conventions.yml
+  - type: ErrorCatalog
+    url: errors/apa-problem-types.yml
+  - type: RateLimits
+    url: rate-limits/apa-rate-limits.yml
+  - type: Examples
+    url: examples/apa-leadership.json
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/icons/apa.png
+- aid: apa:apa-pages-api
+  name: APA Corporation Pages API
+  description: Public, unauthenticated read access to the static corporate pages of apacorp.com — operations
+    by region (United States, Egypt, United Kingdom, Suriname), sustainability, governance, careers and
+    policy pages. Verified live at 79 published pages on 2026-09-14.
+  humanURL: https://apacorp.com/wp-json/
+  baseURL: https://apacorp.com/wp-json
+  tags:
+  - Oil and Gas
+  - Energy
+  - Exploration
+  - Production
+  - Pages
+  - Operations
+  - Content
+  properties:
+  - type: OpenAPI
+    url: openapi/apa-pages-api-openapi.yml
+  - type: Overlay
+    url: overlays/apa-pages-api-overlay.yaml
+  - type: Authentication
+    url: authentication/apa-authentication.yml
+  - type: Conventions
+    url: conventions/apa-conventions.yml
+  - type: ErrorCatalog
+    url: errors/apa-problem-types.yml
+  - type: RateLimits
+    url: rate-limits/apa-rate-limits.yml
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/icons/apa.png
+- aid: apa:apa-media-hub-api
+  name: APA Corporation Media Hub API
+  description: Public, unauthenticated read access to the APA Corporation Media Hub — the presto-videos
+    custom post type carrying APA corporate video content — and to the WordPress media library backing
+    apacorp.com, which holds the published image, document and report assets. Verified live at 24 Media
+    Hub entries and 1,209 media attachments on 2026-09-14.
+  humanURL: https://apacorp.com/wp-json/
+  baseURL: https://apacorp.com/wp-json
+  tags:
+  - Oil and Gas
+  - Energy
+  - Exploration
+  - Production
+  - Media
+  - Video
+  - Content
+  properties:
+  - type: OpenAPI
+    url: openapi/apa-media-hub-api-openapi.yml
+  - type: Overlay
+    url: overlays/apa-media-hub-api-overlay.yaml
+  - type: Authentication
+    url: authentication/apa-authentication.yml
+  - type: Conventions
+    url: conventions/apa-conventions.yml
+  - type: ErrorCatalog
+    url: errors/apa-problem-types.yml
+  - type: RateLimits
+    url: rate-limits/apa-rate-limits.yml
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/icons/apa.png
+- aid: apa:apa-feed-items-api
+  name: APA Corporation Feed Items API
+  description: Public, unauthenticated read access to the syndicated feed items APA Corporation aggregates
+    onto apacorp.com — the wprss_feed_item custom post type produced by the site's RSS aggregator. Verified
+    live at 10 published items on 2026-09-14.
+  humanURL: https://apacorp.com/wp-json/
+  baseURL: https://apacorp.com/wp-json
+  tags:
+  - Oil and Gas
+  - Energy
+  - Exploration
+  - Production
+  - Feeds
+  - Syndication
+  - Content
+  properties:
+  - type: OpenAPI
+    url: openapi/apa-feed-items-api-openapi.yml
+  - type: Overlay
+    url: overlays/apa-feed-items-api-overlay.yaml
+  - type: Authentication
+    url: authentication/apa-authentication.yml
+  - type: Conventions
+    url: conventions/apa-conventions.yml
+  - type: ErrorCatalog
+    url: errors/apa-problem-types.yml
+  - type: RateLimits
+    url: rate-limits/apa-rate-limits.yml
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/icons/apa.png
+- aid: apa:apa-taxonomy-api
+  name: APA Corporation Taxonomy API
+  description: 'Public, unauthenticated read access to the classification terms applied to APA Corporation
+    newsroom content — the category and post_tag taxonomies. Verified live at 1 category and 0 tags on
+    2026-09-14: APA files every newsroom post under a single uncategorised term, so the surface is present
+    but effectively unused.'
+  humanURL: https://apacorp.com/wp-json/
+  baseURL: https://apacorp.com/wp-json
+  tags:
+  - Oil and Gas
+  - Energy
+  - Exploration
+  - Production
+  - Taxonomy
+  - Categories
+  - Content
+  properties:
+  - type: OpenAPI
+    url: openapi/apa-taxonomy-api-openapi.yml
+  - type: Overlay
+    url: overlays/apa-taxonomy-api-overlay.yaml
+  - type: Authentication
+    url: authentication/apa-authentication.yml
+  - type: Conventions
+    url: conventions/apa-conventions.yml
+  - type: ErrorCatalog
+    url: errors/apa-problem-types.yml
+  - type: RateLimits
+    url: rate-limits/apa-rate-limits.yml
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/icons/apa.png
+- aid: apa:apa-authors-api
+  name: APA Corporation Authors API
+  description: Public, unauthenticated read access to the authors credited on APA Corporation newsroom
+    posts. Verified live at 5 public authors on 2026-09-14. WordPress exposes only the public author view
+    anonymously — name, slug, description, avatar and archive link; email and role require authentication.
+  humanURL: https://apacorp.com/wp-json/
+  baseURL: https://apacorp.com/wp-json
+  tags:
+  - Oil and Gas
+  - Energy
+  - Exploration
+  - Production
+  - Authors
+  - People
+  - Content
+  properties:
+  - type: OpenAPI
+    url: openapi/apa-authors-api-openapi.yml
+  - type: Overlay
+    url: overlays/apa-authors-api-overlay.yaml
+  - type: Authentication
+    url: authentication/apa-authentication.yml
+  - type: Conventions
+    url: conventions/apa-conventions.yml
+  - type: ErrorCatalog
+    url: errors/apa-problem-types.yml
+  - type: RateLimits
+    url: rate-limits/apa-rate-limits.yml
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/icons/apa.png
+- aid: apa:apa-search-api
+  name: APA Corporation Search API
+  description: 'Public, unauthenticated cross-resource search over apacorp.com content, returning lightweight
+    id/title/url/type records. Measured behaviour on 2026-09-14: a search for ''energy'' returned X-WP-Total:
+    0, so the index is either restricted to a subset of types or unpopulated — callers should fall back
+    to the per-resource search parameter on the Newsroom and Pages APIs.'
+  humanURL: https://apacorp.com/wp-json/
+  baseURL: https://apacorp.com/wp-json
+  tags:
+  - Oil and Gas
+  - Energy
+  - Exploration
+  - Production
+  - Search
+  - Discovery
+  - Content
+  properties:
+  - type: OpenAPI
+    url: openapi/apa-search-api-openapi.yml
+  - type: Overlay
+    url: overlays/apa-search-api-overlay.yaml
+  - type: Authentication
+    url: authentication/apa-authentication.yml
+  - type: Conventions
+    url: conventions/apa-conventions.yml
+  - type: ErrorCatalog
+    url: errors/apa-problem-types.yml
+  - type: RateLimits
+    url: rate-limits/apa-rate-limits.yml
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/icons/apa.png
+- aid: apa:apa-oembed-api
+  name: APA Corporation oEmbed API
+  description: 'Public, unauthenticated oEmbed 1.0 provider for apacorp.com URLs. Given any apacorp.com
+    page or post URL it returns the standard oEmbed rich/link payload — provider name, author, title,
+    thumbnail and embed HTML — which is how third-party surfaces render an APA newsroom link as a card.
+    Verified live on 2026-09-14 returning provider_name: APA Corporation. oEmbed 1.0 is the one cross-vendor
+    domain standard this surface declares.'
+  humanURL: https://apacorp.com/wp-json/
+  baseURL: https://apacorp.com/wp-json
+  tags:
+  - Oil and Gas
+  - Energy
+  - Exploration
+  - Production
+  - oEmbed
+  - Embedding
+  - Content
+  properties:
+  - type: OpenAPI
+    url: openapi/apa-oembed-api-openapi.yml
+  - type: Overlay
+    url: overlays/apa-oembed-api-overlay.yaml
+  - type: Authentication
+    url: authentication/apa-authentication.yml
+  - type: Conventions
+    url: conventions/apa-conventions.yml
+  - type: ErrorCatalog
+    url: errors/apa-problem-types.yml
+  - type: RateLimits
+    url: rate-limits/apa-rate-limits.yml
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/icons/apa.png
 common:
-  - type: DomainSecurity
-    url: security/apa-domain-security.yml
-  - type: LinkedIn
-    url: https://www.linkedin.com/company/apa-corporation
-  - type: Website
-    url: https://apacorp.com
-  - type: Documentation
-    url: https://apacorp.com
-  - type: Support
-    url: https://apacorp.com/contact
-  - type: Features
-    data:
-      - name: United States Operations
-        description: >-
-          Exploration and production activities in the Permian Basin and other
-          US basins through the Apache Corporation subsidiary.
-      - name: Egypt Operations
-        description: >-
-          Long-standing operations in Egypt's Western Desert through Apache
-          Corporation, one of the largest private natural gas producers in Egypt.
-      - name: United Kingdom Operations
-        description: >-
-          North Sea oil and gas operations through Apache Corporation's UK
-          subsidiary.
-      - name: Suriname Exploration
-        description: >-
-          Offshore exploration in Suriname Block 58 through the APA Suriname
-          subsidiary, with significant oil discoveries including the GranMorgu
-          project.
-      - name: Alaska Exploration
-        description: >-
-          Exploration activities on Alaska's North Slope including the Sockeye-2
-          well oil discovery in partnership with Lagniappe Alaska and Santos.
-  - type: UseCases
-    data:
-      - name: Investor Relations
-        description: >-
-          Access financial results, stock information, SEC filings, and
-          corporate governance information for APA Corporation shareholders.
-      - name: Energy Production Data
-        description: >-
-          Track oil, natural gas, and natural gas liquids production data
-          across APA's operational regions.
-  - type: Integrations
-    data:
-      - name: Nasdaq
-        description: >-
-          APA Corporation is listed on Nasdaq (ticker: APA) and Nasdaq Texas,
-          enabling trading and investor relations integrations.
-  - url: https://apacorp.com/feed/
-    type: Blog
+- type: DomainSecurity
+  url: security/apa-domain-security.yml
+- type: LinkedIn
+  url: https://www.linkedin.com/company/apa-corporation
+- type: Website
+  url: https://apacorp.com
+- type: Support
+  url: https://apacorp.com/newsroom/contact-media-relations/
+- type: Features
+  data:
+  - name: United States Operations
+    description: Exploration and production activities in the Permian Basin and other US basins through
+      the Apache Corporation subsidiary.
+  - name: Egypt Operations
+    description: Long-standing operations in Egypt's Western Desert through Apache Corporation, one of
+      the largest private natural gas producers in Egypt.
+  - name: United Kingdom Operations
+    description: North Sea oil and gas operations through Apache Corporation's UK subsidiary.
+  - name: Suriname Exploration
+    description: Offshore exploration in Suriname Block 58 through the APA Suriname subsidiary, with significant
+      oil discoveries including the GranMorgu project.
+  - name: Alaska Exploration
+    description: Exploration activities on Alaska's North Slope including the Sockeye-2 well oil discovery
+      in partnership with Lagniappe Alaska and Santos.
+- type: UseCases
+  data:
+  - name: Investor Relations
+    description: Access financial results, stock information, SEC filings, and corporate governance information
+      for APA Corporation shareholders.
+  - name: Energy Production Data
+    description: Track oil, natural gas, and natural gas liquids production data across APA's operational
+      regions.
+- type: Integrations
+  data:
+  - name: Nasdaq
+    description: 'APA Corporation is listed on Nasdaq (ticker: APA) and Nasdaq Texas, enabling trading
+      and investor relations integrations.'
+- url: https://apacorp.com/feed/
+  type: Blog
+- type: Authentication
+  url: authentication/apa-authentication.yml
+- type: Conventions
+  url: conventions/apa-conventions.yml
+- type: ErrorCatalog
+  url: errors/apa-problem-types.yml
+- type: Conformance
+  url: conformance/apa-conformance.yml
+- type: Lifecycle
+  url: lifecycle/apa-lifecycle.yml
+- type: DataModel
+  url: data-model/apa-data-model.yml
+- type: RateLimits
+  url: rate-limits/apa-rate-limits.yml
+- type: Plans
+  url: plans/apa-plans-pricing.yml
+- type: LLMsTxt
+  url: llms/apa-llms.txt
+- type: MCPServer
+  url: mcp/apa-mcp.yml
+- type: AgenticAccess
+  url: agentic-access/apa-agentic-access.yml
+- type: AgentSkill
+  url: skills/_index.yml
+- type: Examples
+  url: examples/apa-examples.yml
+- type: Packages
+  url: packages/apa-packages.yml
+- type: PrivacyPolicy
+  url: https://apacorp.com/privacy-policy/
+- type: TermsOfService
+  url: https://apacorp.com/terms-of-use/
+- type: Sustainability
+  url: https://apacorp.com/sustainability/
+- type: Careers
+  url: https://apacorp.com/careers/
+- type: InvestorRelations
+  url: https://investor.apacorp.com/
+  note: APA investor-relations site. Returns 403 to automated clients (edge bot policy) and could not
+    be read on 2026-09-14; apacorp.com/newsroom/ 302-redirects here, which is how its existence was confirmed.
 maintainers:
-  - FN: Kin Lane
-    email: kin@apievangelist.com
+- FN: Kin Lane
+  email: kin@apievangelist.com
+x-enrichment:
+  date: '2026-09-14'
+  status: enriched
+  artifacts_added: 40
+  pass: local-v3

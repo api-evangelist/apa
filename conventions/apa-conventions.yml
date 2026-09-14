@@ -1,0 +1,162 @@
+generated: '2026-09-14'
+method: probed
+source: live response headers and bodies from https://apacorp.com/wp-json on 2026-09-14, plus the site's own OPTIONS schema documents
+provider: APA Corporation
+providerId: apa
+description: >-
+  Cross-cutting runtime semantics for the APA Corporation REST surface at https://apacorp.com/wp-json.
+  Every value below was read off a live response on 2026-09-14 or out of the server's own published
+  OPTIONS argument schema — none of it is asserted from documentation, because APA publishes none.
+  The surface is stock WordPress REST plus one APA-registered namespace, so the conventions are the
+  WordPress conventions, which is itself the useful finding: an agent that already speaks wp/v2
+  needs no bespoke connector here.
+auth:
+  style: anonymous
+  header: null
+  note: See authentication/apa-authentication.yml. No credential is required for any documented operation.
+versioning:
+  style: namespace-in-path
+  current: wp/v2
+  additional_namespaces:
+    - apa-ticker/v1
+    - oembed/1.0
+    - yoast/v1
+  note: >-
+    WordPress versions by REST namespace, not by header or query parameter. There is no
+    Accept-Version or API-Version header on this surface. APA's own namespace is versioned the same
+    way and is currently at v1.
+pagination:
+  style: page-and-offset
+  parameters:
+    - name: page
+      description: Current page of the collection. Default 1, minimum 1.
+    - name: per_page
+      description: Items per page. Default 10, minimum 1, maximum 100.
+    - name: offset
+      description: Offset the result set by a specific number of items.
+  response_headers:
+    - name: X-WP-Total
+      description: Total number of items in the unpaginated collection. Observed live — 51 on /wp/v2/posts, 25 on /wp/v2/leaderships, 1209 on /wp/v2/media.
+    - name: X-WP-TotalPages
+      description: Total pages available at the current per_page.
+    - name: Link
+      description: RFC 8288 Web Linking header carrying rel="next" and rel="prev". Observed live on /wp/v2/posts.
+  cursor: false
+  note: >-
+    Offset pagination only. There is no cursor or continuation token, so deep pagination over the
+    1,209-item media collection costs the server a growing offset scan.
+field_selection:
+  supported: true
+  parameters:
+    - name: _fields
+      description: Comma-separated list of top-level response fields to return. Verified live against /wp/v2/posts.
+    - name: _embed
+      description: Embed linked resources (author, terms, featured media) into the _embedded key rather than requiring follow-up calls.
+    - name: context
+      description: Response projection. view (default), embed (minimal), edit (requires authentication).
+  note: >-
+    _embed is the closest thing this surface has to expansion and is the single most useful
+    efficiency lever on it — it collapses the author and term lookups a newsroom render would
+    otherwise need into one request.
+ordering_and_filtering:
+  parameters:
+    - orderby
+    - order
+    - search
+    - after
+    - before
+    - modified_after
+    - modified_before
+    - include
+    - exclude
+    - slug
+    - status
+  note: Read from the server's own OPTIONS argument schema for each collection route.
+error_envelope:
+  format: wordpress-rest
+  media_type: application/json
+  rfc9457: false
+  shape:
+    code: Machine-readable WordPress error code, e.g. rest_post_invalid_id.
+    message: Human-readable message.
+    data.status: The HTTP status, repeated inside the body.
+  note: >-
+    Not RFC 9457 problem+json. There is no type URI and no instance. See
+    errors/apa-problem-types.yml for the observed catalogue.
+rate_limit_signaling:
+  headers_returned: []
+  status_on_exhaustion: null
+  note: >-
+    Measured, not assumed: no X-RateLimit-*, RateLimit-* or Retry-After header appeared on any
+    response observed on 2026-09-14. The surface sits behind Cloudflare and WP Engine, so an
+    unpublished edge limit almost certainly exists, but the API returns no runtime signal an agent
+    could read. See rate-limits/apa-rate-limits.yml.
+caching:
+  headers_returned:
+    - Cache-Control
+    - Last-Modified
+    - X-Cache
+    - CF-Cache-Status
+    - Age
+  note: >-
+    Observed live: the ticker quote is served Cache-Control "max-age=600, must-revalidate" with
+    CF-Cache-Status HIT and an Age of up to 600s, so a caller must expect a quote up to ten minutes
+    stale. Collection routes carry the same 600s max-age via x-cacheable SHORT.
+cors:
+  enabled: true
+  allow_origin: '*'
+  allow_methods:
+    - GET
+  allow_headers:
+    - Authorization
+    - X-WP-Nonce
+    - Content-Disposition
+    - Content-MD5
+    - Content-Type
+  expose_headers:
+    - X-WP-Total
+    - X-WP-TotalPages
+    - Link
+  note: >-
+    Verified live. The pagination headers are explicitly exposed to cross-origin callers, so a
+    browser client can page this surface correctly without a proxy.
+request_id_tracing:
+  supported: false
+  note: >-
+    No request-id or correlation header is returned. The only per-request identifier observable is
+    Cloudflare's CF-Ray, which is an edge trace and not something APA would honour in a support
+    conversation — there is no support channel for this surface to begin with.
+idempotency:
+  coverage: na
+  mechanism: none
+  header: null
+  note: >-
+    Not applicable rather than absent. The public contract documented in this repository is
+    read-only — 28 operations, all GET, all safe and idempotent by HTTP method. WordPress write
+    methods exist on the same routes but are gated behind an application password no third party
+    can obtain, so there is no mutating surface a public consumer can reach and therefore no replay
+    risk to protect against.
+dry_run_mode:
+  supported: na
+  note: Not applicable. No write surface is publicly reachable, so there is nothing to rehearse.
+reversibility:
+  grade: na
+  applicable: false
+  write_surface: none
+  note: >-
+    Not applicable, and honestly so. Every operation on the public contract is a GET; nothing a
+    third-party caller can do to this surface changes state, so there is no action to take back and
+    no window to state. This is recorded as na rather than scored zero because the absence is a
+    property of a read-only API, not a governance gap. If APA ever opens a write surface, this block
+    is where the cancel/undo/restore operations and their windows would be recorded.
+  reversal_operations: []
+  windows: []
+cross_links:
+  errors: errors/apa-problem-types.yml
+  lifecycle: lifecycle/apa-lifecycle.yml
+  authentication: authentication/apa-authentication.yml
+  rate_limits: rate-limits/apa-rate-limits.yml
+  conformance: conformance/apa-conformance.yml
+maintainers:
+  - FN: Kin Lane
+    email: kin@apievangelist.com

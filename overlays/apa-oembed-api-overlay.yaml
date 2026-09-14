@@ -1,0 +1,42 @@
+overlay: 1.0.0
+info:
+  title: API Evangelist enhancements for the APA Corporation oEmbed API
+  version: 1.0.0
+  description: Non-destructive enhancements applied by the API Evangelist enrichment pipeline to openapi/apa-oembed-api-openapi.yml. The original document is never mutated. Every addition here is provenance and runtime semantics read from live probes on 2026-09-14 — nothing changes a path, parameter or schema.
+extends: openapi/apa-oembed-api-openapi.yml
+actions:
+- target: $.info
+  description: Record that this document is an API Evangelist derivation from the provider's own OPTIONS schema documents, not a provider-published contract.
+  update:
+    x-api-evangelist-profile: https://apis.io/provider/apa/
+    x-derived-on: '2026-09-14'
+    x-provider-published-contract: false
+- target: $.info
+  description: Attach the repository artifacts that carry the runtime semantics this spec does not express.
+  update:
+    x-artifacts:
+      authentication: authentication/apa-authentication.yml
+      conventions: conventions/apa-conventions.yml
+      errors: errors/apa-problem-types.yml
+      rate-limits: rate-limits/apa-rate-limits.yml
+      lifecycle: lifecycle/apa-lifecycle.yml
+      conformance: conformance/apa-conformance.yml
+      data-model: data-model/apa-data-model.yml
+      agentic-access: agentic-access/apa-agentic-access.yml
+- target: $.info
+  description: State the measured rate-limit posture so a consumer does not assume headers exist.
+  update:
+    x-rate-limit-signal: none observed 2026-09-14; no X-RateLimit-*, RateLimit-* or Retry-After header is returned
+- target: $.paths.*.get
+  description: Mark every documented operation safe, read-only and callable without credentials, as verified live on 2026-09-14.
+  update:
+    x-agentic-access:
+      action_class: read
+      consequence: none
+      reversible: na
+      auth_required: false
+      verified: '2026-09-14'
+- target: $.servers[0]
+  description: Note that the API host is the corporate website host, behind Cloudflare and WP Engine.
+  update:
+    x-host-notes: apacorp.com is the corporate marketing host; the REST API is the same origin, edge-cached for 600s.

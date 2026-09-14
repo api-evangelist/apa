@@ -1,0 +1,174 @@
+openapi: 3.2.0
+info:
+  title: APA Corporation Search API
+  version: wp/v2
+  description: 'Public, unauthenticated cross-resource search over apacorp.com content — posts, pages and registered custom types — returning lightweight id/title/url/type records rather than full objects. Note the measured behaviour: on 2026-09-14 a search for `energy` returned `X-WP-Total: 0`, so the index is either restricted to a subset of types or not populated; callers should expect thin results and fall back to the per-resource `search` parameter on the Newsroom and Pages APIs.'
+  contact:
+    name: APA Corporation
+    url: https://apacorp.com/newsroom/contact-media-relations/
+  x-derived-from: https://apacorp.com/wp-json/ route index + per-route HTTP OPTIONS schema documents
+  x-derived-on: '2026-09-14'
+  x-api-evangelist-note: Third-party profile. APA Corporation publishes no developer program; this documents the anonymously readable WordPress REST content API served from apacorp.com. Every path, parameter and schema here was read from the server's own published OPTIONS documents, or from an observed live response, on 2026-09-14 — nothing is invented.
+servers:
+- url: https://apacorp.com/wp-json
+  description: APA Corporation WordPress REST API
+tags:
+- name: Search
+  description: Cross-resource search over apacorp.com content.
+paths:
+  /wp/v2/search:
+    get:
+      operationId: searchContent
+      summary: Search across content
+      tags:
+      - Search
+      description: Search across the searchable content types on apacorp.com and return lightweight result records.
+      parameters:
+      - name: context
+        in: query
+        schema:
+          type: string
+          enum:
+          - view
+          - embed
+          default: view
+        description: Scope under which the request is made; determines fields present in response.
+      - name: exclude
+        in: query
+        schema:
+          type: array
+          default: []
+          items:
+            type: integer
+        description: Ensure result set excludes specific IDs.
+      - name: include
+        in: query
+        schema:
+          type: array
+          default: []
+          items:
+            type: integer
+        description: Limit result set to specific IDs.
+      - name: page
+        in: query
+        schema:
+          type: integer
+          default: 1
+          minimum: 1
+        description: Current page of the collection.
+      - name: per_page
+        in: query
+        schema:
+          type: integer
+          default: 10
+          minimum: 1
+          maximum: 100
+        description: Maximum number of items to be returned in result set.
+      - name: search
+        in: query
+        schema:
+          type: string
+        description: Limit results to those matching a string.
+      - name: subtype
+        in: query
+        schema:
+          type: array
+          default: any
+          items:
+            enum:
+            - post
+            - page
+            - e-floating-buttons
+            - elementor_library
+            - leaderships
+            - pp_video_block
+            - popup
+            - popup_theme
+            - wprss_feed_item
+            - category
+            - post_tag
+            - any
+            type: string
+        description: Limit results to items of one or more object subtypes.
+      - name: type
+        in: query
+        schema:
+          type: string
+          enum:
+          - post
+          - term
+          - post-format
+          default: post
+        description: Limit results to items of an object type.
+      responses:
+        '200':
+          description: A page of search results.
+          headers:
+            X-WP-Total:
+              description: Total matches.
+              schema:
+                type: integer
+            X-WP-TotalPages:
+              description: Total pages.
+              schema:
+                type: integer
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SearchResult'
+        '404':
+          description: No such resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+components:
+  schemas:
+    SearchResult:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: Unique identifier for the object.
+        title:
+          type: string
+          description: The title for the object.
+        url:
+          type: string
+          format: uri
+          description: URL to the object.
+        type:
+          type: string
+          description: Object type.
+        subtype:
+          type: string
+          description: Object subtype.
+        _links:
+          type: object
+    Error:
+      type: object
+      title: Error
+      description: WordPress REST API error envelope. Not RFC 9457 problem+json.
+      properties:
+        code:
+          type: string
+        message:
+          type: string
+        data:
+          type: object
+          properties:
+            status:
+              type: integer
+      required:
+      - code
+      - message
+  securitySchemes:
+    applicationPassword:
+      type: http
+      scheme: basic
+      description: 'WordPress application passwords. The site''s own root discovery document at https://apacorp.com/wp-json/ publishes this as its only authentication method, with the authorization endpoint at https://apacorp.com/wp-admin/authorize-application.php. Credentials are a WordPress username plus an application password sent as HTTP Basic. It is NOT required for anything documented here: every operation in this spec was verified to answer anonymously on 2026-09-14. An authenticated caller additionally unlocks context=edit fields and the write methods, which are out of scope for this public profile.'
+security:
+- {}
+- applicationPassword: []
