@@ -349,38 +349,6 @@ apis:
   - type: RateLimits
     url: rate-limits/apa-rate-limits.yml
   image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/icons/apa.png
-- aid: apa:apa-oembed-api
-  name: APA Corporation oEmbed API
-  description: >-
-    Public, unauthenticated oEmbed 1.0 provider for apacorp.com URLs. Given any apacorp.com page or post
-    URL it returns the standard oEmbed rich/link payload — provider name, author, title, thumbnail and
-    embed HTML — which is how third-party surfaces render an APA newsroom link as a card. Verified live
-    on 2026-09-14 returning provider_name: APA Corporation. oEmbed 1.0 is the one cross-vendor domain
-    standard this surface declares.
-  humanURL: https://apacorp.com/wp-json/
-  baseURL: https://apacorp.com/wp-json
-  tags:
-  - Oil and Gas
-  - Energy
-  - Exploration
-  - Production
-  - oEmbed
-  - Embedding
-  - Content
-  properties:
-  - type: OpenAPI
-    url: openapi/apa-oembed-api-openapi.yml
-  - type: Overlay
-    url: overlays/apa-oembed-api-overlay.yaml
-  - type: Authentication
-    url: authentication/apa-authentication.yml
-  - type: Conventions
-    url: conventions/apa-conventions.yml
-  - type: ErrorCatalog
-    url: errors/apa-problem-types.yml
-  - type: RateLimits
-    url: rate-limits/apa-rate-limits.yml
-  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/icons/apa.png
 - aid: apa:apa-media-api
   name: APA Corporation Media API
   description: APA Corporation video content and media library assets.
@@ -399,7 +367,27 @@ apis:
     url: errors/apa-problem-types.yml
   - type: RateLimits
     url: rate-limits/apa-rate-limits.yml
+- aid: apa:apa-o-embed-api
+  name: APA Corporation o Embed API
+  description: oEmbed 1.0 discovery and embed payloads for apacorp.com URLs.
+  humanURL: https://apacorp.com
+  baseURL: https://apacorp.com/wp-json
+  tags:
+  - o Embed
+  properties:
+  - type: OpenAPI
+    url: openapi/apa-o-embed-api-openapi.yml
+  - type: Authentication
+    url: authentication/apa-authentication.yml
+  - type: Conventions
+    url: conventions/apa-conventions.yml
+  - type: ErrorCatalog
+    url: errors/apa-problem-types.yml
+  - type: RateLimits
+    url: rate-limits/apa-rate-limits.yml
 common:
+- type: Overlay
+  url: overlays/apa-oembed-api-overlay.yaml
 - type: Overlay
   url: overlays/apa-media-hub-api-overlay.yaml
 - type: DomainSecurity
