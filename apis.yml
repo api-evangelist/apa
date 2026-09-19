@@ -240,6 +240,14 @@ apis:
   - Energy
   - Exploration
   - Production
+  - Feed
+  - Syndication
+  - Content
+  tags_raw:
+  - Oil and Gas
+  - Energy
+  - Exploration
+  - Production
   - Feeds
   - Syndication
   - Content
@@ -373,6 +381,8 @@ apis:
   humanURL: https://apacorp.com
   baseURL: https://apacorp.com/wp-json
   tags:
+  - oEmbed
+  tags_raw:
   - o Embed
   properties:
   - type: OpenAPI
