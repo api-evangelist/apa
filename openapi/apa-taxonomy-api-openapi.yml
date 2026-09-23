@@ -17,6 +17,9 @@ info:
 servers:
 - url: https://apacorp.com/wp-json
   description: APA Corporation WordPress REST API
+security:
+- {}
+- applicationPassword: []
 tags:
 - name: Taxonomy
   description: Categories and tags classifying APA newsroom content.
@@ -126,7 +129,7 @@ paths:
       responses:
         '200':
           description: A page of results.
-          headers: &id002
+          headers:
             X-WP-Total:
               description: Total number of items in the unpaginated collection.
               schema:
@@ -143,7 +146,7 @@ paths:
             application/json:
               schema:
                 type: array
-                items: &id001
+                items:
                   $ref: '#/components/schemas/Category'
         '400':
           description: Invalid parameter. WordPress returns a JSON error envelope with `code`, `message` and `data.status`.
@@ -276,7 +279,8 @@ paths:
           description: The requested resource.
           content:
             application/json:
-              schema: *id001
+              schema:
+                $ref: '#/components/schemas/Category'
         '400':
           description: Invalid parameter. WordPress returns a JSON error envelope with `code`, `message` and `data.status`.
           content:
@@ -400,12 +404,24 @@ paths:
       responses:
         '200':
           description: A page of results.
-          headers: *id002
+          headers:
+            X-WP-Total:
+              description: Total number of items in the unpaginated collection.
+              schema:
+                type: integer
+            X-WP-TotalPages:
+              description: Total number of pages available at the current `per_page`.
+              schema:
+                type: integer
+            Link:
+              description: RFC 8288 `next` / `prev` pagination links.
+              schema:
+                type: string
           content:
             application/json:
               schema:
                 type: array
-                items: &id003
+                items:
                   $ref: '#/components/schemas/Tag'
         '400':
           description: Invalid parameter. WordPress returns a JSON error envelope with `code`, `message` and `data.status`.
@@ -538,7 +554,8 @@ paths:
           description: The requested resource.
           content:
             application/json:
-              schema: *id003
+              schema:
+                $ref: '#/components/schemas/Tag'
         '400':
           description: Invalid parameter. WordPress returns a JSON error envelope with `code`, `message` and `data.status`.
           content:
@@ -559,26 +576,40 @@ paths:
                 $ref: '#/components/schemas/Error'
 components:
   schemas:
-    Error:
+    Tag:
       type: object
-      title: Error
-      description: WordPress REST API error envelope. Not RFC 9457 problem+json.
       properties:
-        code:
+        id:
+          type: integer
+          description: Unique identifier for the term.
+          readOnly: true
+        count:
+          type: integer
+          description: Number of published posts for the term.
+          readOnly: true
+        description:
           type: string
-          description: Machine-readable WordPress error code, e.g. `rest_post_invalid_id`.
-        message:
+          description: HTML description of the term.
+        link:
           type: string
-          description: Human-readable error message.
-        data:
+          description: URL of the term.
+          format: uri
+          readOnly: true
+        name:
+          type: string
+          description: HTML title for the term.
+        slug:
+          type: string
+          description: An alphanumeric identifier for the term unique to its type.
+        taxonomy:
+          type: string
+          description: Type attribution for the term.
+          enum:
+          - post_tag
+          readOnly: true
+        meta:
           type: object
-          description: Error data; carries the HTTP `status`.
-          properties:
-            status:
-              type: integer
-      required:
-      - code
-      - message
+          description: Meta fields.
     Category:
       type: object
       properties:
@@ -619,45 +650,28 @@ components:
         acf:
           type: object
           description: ACF field data
-    Tag:
+    Error:
       type: object
+      title: Error
+      description: WordPress REST API error envelope. Not RFC 9457 problem+json.
       properties:
-        id:
-          type: integer
-          description: Unique identifier for the term.
-          readOnly: true
-        count:
-          type: integer
-          description: Number of published posts for the term.
-          readOnly: true
-        description:
+        code:
           type: string
-          description: HTML description of the term.
-        link:
+          description: Machine-readable WordPress error code, e.g. `rest_post_invalid_id`.
+        message:
           type: string
-          description: URL of the term.
-          format: uri
-          readOnly: true
-        name:
-          type: string
-          description: HTML title for the term.
-        slug:
-          type: string
-          description: An alphanumeric identifier for the term unique to its type.
-        taxonomy:
-          type: string
-          description: Type attribution for the term.
-          enum:
-          - post_tag
-          readOnly: true
-        meta:
+          description: Human-readable error message.
+        data:
           type: object
-          description: Meta fields.
+          description: Error data; carries the HTTP `status`.
+          properties:
+            status:
+              type: integer
+      required:
+      - code
+      - message
   securitySchemes:
     applicationPassword:
       type: http
       scheme: basic
       description: 'WordPress application passwords. The site''s own root discovery document at https://apacorp.com/wp-json/ publishes this as its only authentication method, with the authorization endpoint at https://apacorp.com/wp-admin/authorize-application.php. Credentials are a WordPress username plus an application password sent as HTTP Basic. It is NOT required for anything documented here: every operation in this spec was verified to answer anonymously on 2026-09-14. An authenticated caller additionally unlocks context=edit fields and the write methods, which are out of scope for this public profile.'
-security:
-- {}
-- applicationPassword: []

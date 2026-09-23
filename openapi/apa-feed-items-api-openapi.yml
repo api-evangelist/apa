@@ -16,6 +16,9 @@ info:
 servers:
 - url: https://apacorp.com/wp-json
   description: APA Corporation WordPress REST API
+security:
+- {}
+- applicationPassword: []
 tags:
 - name: Feed Items
   description: Third-party feed items aggregated onto apacorp.com.
@@ -225,7 +228,7 @@ paths:
             application/json:
               schema:
                 type: array
-                items: &id001
+                items:
                   $ref: '#/components/schemas/WprssFeedItem'
         '400':
           description: Invalid parameter. WordPress returns a JSON error envelope with `code`, `message` and `data.status`.
@@ -441,7 +444,8 @@ paths:
           description: The requested resource.
           content:
             application/json:
-              schema: *id001
+              schema:
+                $ref: '#/components/schemas/WprssFeedItem'
         '400':
           description: Invalid parameter. WordPress returns a JSON error envelope with `code`, `message` and `data.status`.
           content:
@@ -462,26 +466,6 @@ paths:
                 $ref: '#/components/schemas/Error'
 components:
   schemas:
-    Error:
-      type: object
-      title: Error
-      description: WordPress REST API error envelope. Not RFC 9457 problem+json.
-      properties:
-        code:
-          type: string
-          description: Machine-readable WordPress error code, e.g. `rest_post_invalid_id`.
-        message:
-          type: string
-          description: Human-readable error message.
-        data:
-          type: object
-          description: Error data; carries the HTTP `status`.
-          properties:
-            status:
-              type: integer
-      required:
-      - code
-      - message
     WprssFeedItem:
       type: object
       properties:
@@ -606,11 +590,28 @@ components:
         publishpress_future_workflow_manual_trigger:
           type: object
           description: Workflow Manual Trigger
+    Error:
+      type: object
+      title: Error
+      description: WordPress REST API error envelope. Not RFC 9457 problem+json.
+      properties:
+        code:
+          type: string
+          description: Machine-readable WordPress error code, e.g. `rest_post_invalid_id`.
+        message:
+          type: string
+          description: Human-readable error message.
+        data:
+          type: object
+          description: Error data; carries the HTTP `status`.
+          properties:
+            status:
+              type: integer
+      required:
+      - code
+      - message
   securitySchemes:
     applicationPassword:
       type: http
       scheme: basic
       description: 'WordPress application passwords. The site''s own root discovery document at https://apacorp.com/wp-json/ publishes this as its only authentication method, with the authorization endpoint at https://apacorp.com/wp-admin/authorize-application.php. Credentials are a WordPress username plus an application password sent as HTTP Basic. It is NOT required for anything documented here: every operation in this spec was verified to answer anonymously on 2026-09-14. An authenticated caller additionally unlocks context=edit fields and the write methods, which are out of scope for this public profile.'
-security:
-- {}
-- applicationPassword: []

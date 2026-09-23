@@ -12,6 +12,9 @@ info:
 servers:
 - url: https://apacorp.com/wp-json
   description: APA Corporation WordPress REST API
+security:
+- {}
+- applicationPassword: []
 tags:
 - name: Discovery
   description: Self-describing registration metadata for the apacorp.com REST surface.
@@ -44,7 +47,7 @@ paths:
                 description: Return every content type registered on apacorp.com, keyed by slug, with its REST base and namespace. This is how a caller discovers the APA-specific resources — `leaderships`, `presto-videos`, `visualizer`, `wprss_feed_item` — that are not part of stock WordPress.
                 additionalProperties:
                   type: object
-        '404': &id001
+        '404':
           description: No such resource.
           content:
             application/json:
@@ -83,7 +86,12 @@ paths:
                 description: Return every taxonomy registered on apacorp.com, keyed by slug, with the content types it applies to and its REST base.
                 additionalProperties:
                   type: object
-        '404': *id001
+        '404':
+          description: No such resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
   /wp/v2/statuses:
     get:
       operationId: listPostStatuses
@@ -112,7 +120,12 @@ paths:
                 description: Return every post status registered on apacorp.com, keyed by slug. Anonymous callers only ever see `publish`.
                 additionalProperties:
                   type: object
-        '404': *id001
+        '404':
+          description: No such resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
   /wp/v2/types/{type}:
     get:
       operationId: getContentType
@@ -144,7 +157,12 @@ paths:
             application/json:
               schema:
                 type: object
-        '404': *id001
+        '404':
+          description: No such resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
   /wp/v2/taxonomies/{taxonomy}:
     get:
       operationId: getTaxonomy
@@ -181,7 +199,12 @@ paths:
             application/json:
               schema:
                 type: object
-        '404': *id001
+        '404':
+          description: No such resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
   /wp/v2/statuses/{status}:
     get:
       operationId: getPostStatus
@@ -213,7 +236,12 @@ paths:
             application/json:
               schema:
                 type: object
-        '404': *id001
+        '404':
+          description: No such resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
 components:
   schemas:
     Error:
@@ -238,6 +266,3 @@ components:
       type: http
       scheme: basic
       description: 'WordPress application passwords. The site''s own root discovery document at https://apacorp.com/wp-json/ publishes this as its only authentication method, with the authorization endpoint at https://apacorp.com/wp-admin/authorize-application.php. Credentials are a WordPress username plus an application password sent as HTTP Basic. It is NOT required for anything documented here: every operation in this spec was verified to answer anonymously on 2026-09-14. An authenticated caller additionally unlocks context=edit fields and the write methods, which are out of scope for this public profile.'
-security:
-- {}
-- applicationPassword: []

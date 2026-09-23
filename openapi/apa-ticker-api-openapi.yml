@@ -2,7 +2,7 @@ openapi: 3.2.0
 info:
   title: APA Corporation Ticker API
   version: apa-ticker/v1
-  description: 'The one route on apacorp.com that APA Corporation registered itself rather than inheriting from WordPress or a plugin: `apa-ticker/v1`, a public, unauthenticated, CORS-open JSON endpoint returning the delayed APA (Nasdaq: APA) share-price quote used by the ticker on the corporate site. Verified live on 2026-09-14 returning `{"symbol":"APA","price":45.09,...,"source":"nasdaq"}` with `Cache-Control: max-age=600`. The response schema below was read from that observed response; the endpoint publishes no OPTIONS argument schema because it takes no parameters.'
+  description: 'The one route on apacorp.com that APA Corporation registered itself rather than inheriting from WordPress or a plugin: `apa-ticker/v1`, a public, unauthenticated, CORS-open JSON endpoint returning the delayed APA (Nasdaq: APA) share-price quote used by the ticker on the corporate site.'
   contact:
     name: APA Corporation
     url: https://apacorp.com/newsroom/contact-media-relations/
@@ -13,6 +13,9 @@ info:
 servers:
 - url: https://apacorp.com/wp-json
   description: APA Corporation WordPress REST API
+security:
+- {}
+- applicationPassword: []
 tags:
 - name: Ticker
   description: APA Corporation delayed share-price quote.
@@ -47,7 +50,7 @@ paths:
                     percent: 0.13
                     is_up: true
                     source: nasdaq
-        '404': &id001
+        '404':
           description: No such resource.
           content:
             application/json:
@@ -76,9 +79,24 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/NamespaceIndex'
-        '404': *id001
+        '404':
+          description: No such resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
 components:
   schemas:
+    NamespaceIndex:
+      type: object
+      description: WordPress namespace index describing the routes registered under `apa-ticker/v1`.
+      properties:
+        namespace:
+          type: string
+        routes:
+          type: object
+        _links:
+          type: object
     Quote:
       type: object
       description: A delayed APA Corporation share-price quote as returned by the live endpoint on 2026-09-14.
@@ -113,16 +131,6 @@ components:
           description: 'Upstream quote source. Observed value: `nasdaq`.'
           examples:
           - nasdaq
-    NamespaceIndex:
-      type: object
-      description: WordPress namespace index describing the routes registered under `apa-ticker/v1`.
-      properties:
-        namespace:
-          type: string
-        routes:
-          type: object
-        _links:
-          type: object
     Error:
       type: object
       title: Error
@@ -145,6 +153,3 @@ components:
       type: http
       scheme: basic
       description: 'WordPress application passwords. The site''s own root discovery document at https://apacorp.com/wp-json/ publishes this as its only authentication method, with the authorization endpoint at https://apacorp.com/wp-admin/authorize-application.php. Credentials are a WordPress username plus an application password sent as HTTP Basic. It is NOT required for anything documented here: every operation in this spec was verified to answer anonymously on 2026-09-14. An authenticated caller additionally unlocks context=edit fields and the write methods, which are out of scope for this public profile.'
-security:
-- {}
-- applicationPassword: []

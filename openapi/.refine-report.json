@@ -1,0 +1,49 @@
+{
+  "provider": "apa",
+  "sources": [
+    "apa-authors-api-openapi.yml",
+    "apa-discovery-api-openapi.yml",
+    "apa-feed-items-api-openapi.yml",
+    "apa-leadership-api-openapi.yml",
+    "apa-media-api-openapi.yml",
+    "apa-newsroom-api-openapi.yml",
+    "apa-o-embed-api-openapi.yml",
+    "apa-pages-api-openapi.yml",
+    "apa-search-api-openapi.yml",
+    "apa-taxonomy-api-openapi.yml",
+    "apa-ticker-api-openapi.yml"
+  ],
+  "outputs": [
+    "apa-authors-api-openapi.yml",
+    "apa-discovery-api-openapi.yml",
+    "apa-feed-items-api-openapi.yml",
+    "apa-leadership-api-openapi.yml",
+    "apa-media-api-openapi.yml",
+    "apa-newsroom-api-openapi.yml",
+    "apa-o-embed-api-openapi.yml",
+    "apa-pages-api-openapi.yml",
+    "apa-search-api-openapi.yml",
+    "apa-taxonomy-api-openapi.yml",
+    "apa-ticker-api-openapi.yml"
+  ],
+  "archived": [],
+  "errors": [],
+  "warnings": [
+    "apa-authors-api-openapi.yml: previously refined output kept for 2 operation(s) no archived document covers (e.g. /wp/v2/users get, /wp/v2/users/{id} get); its other 0 operation(s) came from the archive and were dropped from it. The archive is incomplete for this provider \u2014 re-harvest to restore _original/ as the full source of truth.",
+    "apa-discovery-api-openapi.yml: previously refined output kept for 6 operation(s) no archived document covers (e.g. /wp/v2/statuses get, /wp/v2/statuses/{status} get, /wp/v2/taxonomies get); its other 0 operation(s) came from the archive and were dropped from it. The archive is incomplete for this provider \u2014 re-harvest to restore _original/ as the full source of truth.",
+    "apa-feed-items-api-openapi.yml: previously refined output kept for 2 operation(s) no archived document covers (e.g. /wp/v2/wprss_feed_item get, /wp/v2/wprss_feed_item/{id} get); its other 0 operation(s) came from the archive and were dropped from it. The archive is incomplete for this provider \u2014 re-harvest to restore _original/ as the full source of truth.",
+    "apa-leadership-api-openapi.yml: previously refined output kept for 2 operation(s) no archived document covers (e.g. /wp/v2/leaderships get, /wp/v2/leaderships/{id} get); its other 0 operation(s) came from the archive and were dropped from it. The archive is incomplete for this provider \u2014 re-harvest to restore _original/ as the full source of truth.",
+    "apa-media-api-openapi.yml: previously refined output kept for 4 operation(s) no archived document covers (e.g. /wp/v2/media get, /wp/v2/media/{id} get, /wp/v2/presto-videos get); its other 0 operation(s) came from the archive and were dropped from it. The archive is incomplete for this provider \u2014 re-harvest to restore _original/ as the full source of truth.",
+    "apa-newsroom-api-openapi.yml: previously refined output kept for 2 operation(s) no archived document covers (e.g. /wp/v2/posts get, /wp/v2/posts/{id} get); its other 0 operation(s) came from the archive and were dropped from it. The archive is incomplete for this provider \u2014 re-harvest to restore _original/ as the full source of truth.",
+    "apa-o-embed-api-openapi.yml: previously refined output kept for 1 operation(s) no archived document covers (e.g. /oembed/1.0/embed get); its other 0 operation(s) came from the archive and were dropped from it. The archive is incomplete for this provider \u2014 re-harvest to restore _original/ as the full source of truth.",
+    "apa-pages-api-openapi.yml: previously refined output kept for 2 operation(s) no archived document covers (e.g. /wp/v2/pages get, /wp/v2/pages/{id} get); its other 0 operation(s) came from the archive and were dropped from it. The archive is incomplete for this provider \u2014 re-harvest to restore _original/ as the full source of truth.",
+    "apa-search-api-openapi.yml: previously refined output kept for 1 operation(s) no archived document covers (e.g. /wp/v2/search get); its other 0 operation(s) came from the archive and were dropped from it. The archive is incomplete for this provider \u2014 re-harvest to restore _original/ as the full source of truth.",
+    "apa-taxonomy-api-openapi.yml: previously refined output kept for 4 operation(s) no archived document covers (e.g. /wp/v2/categories get, /wp/v2/categories/{id} get, /wp/v2/tags get); its other 0 operation(s) came from the archive and were dropped from it. The archive is incomplete for this provider \u2014 re-harvest to restore _original/ as the full source of truth.",
+    "apa-ticker-api-openapi.yml: previously refined output kept for 2 operation(s) no archived document covers (e.g. /apa-ticker/v1 get, /apa-ticker/v1/quote get); its other 0 operation(s) came from the archive and were dropped from it. The archive is incomplete for this provider \u2014 re-harvest to restore _original/ as the full source of truth."
+  ],
+  "notes": [
+    "sourced from openapi/_original/ (0 archived document(s)); previously refined output at the top level was skipped rather than re-split",
+    "apis.yml register: already-registered"
+  ],
+  "skipped": []
+}

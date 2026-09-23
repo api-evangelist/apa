@@ -12,6 +12,9 @@ info:
 servers:
 - url: https://apacorp.com/wp-json
   description: APA Corporation WordPress REST API
+security:
+- {}
+- applicationPassword: []
 tags:
 - name: Search
   description: Cross-resource search over apacorp.com content.
@@ -169,6 +172,3 @@ components:
       type: http
       scheme: basic
       description: 'WordPress application passwords. The site''s own root discovery document at https://apacorp.com/wp-json/ publishes this as its only authentication method, with the authorization endpoint at https://apacorp.com/wp-admin/authorize-application.php. Credentials are a WordPress username plus an application password sent as HTTP Basic. It is NOT required for anything documented here: every operation in this spec was verified to answer anonymously on 2026-09-14. An authenticated caller additionally unlocks context=edit fields and the write methods, which are out of scope for this public profile.'
-security:
-- {}
-- applicationPassword: []

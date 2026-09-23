@@ -1,6 +1,6 @@
 openapi: 3.2.0
 info:
-  title: APA Corporation oEmbed API
+  title: APA Corporation o Embed API
   version: oembed/1.0
   description: 'Public, unauthenticated oEmbed 1.0 provider for apacorp.com URLs. Given any apacorp.com page or post URL it returns the standard oEmbed rich/link payload — provider name, author, title, thumbnail and embed HTML — which is how third-party surfaces render an APA newsroom link as a card. Verified live on 2026-09-14 returning `provider_name: APA Corporation`.'
   contact:
@@ -12,8 +12,11 @@ info:
 servers:
 - url: https://apacorp.com/wp-json
   description: APA Corporation WordPress REST API
+security:
+- {}
+- applicationPassword: []
 tags:
-- name: oEmbed
+- name: o Embed
   description: oEmbed 1.0 discovery and embed payloads for apacorp.com URLs.
 paths:
   /oembed/1.0/embed:
@@ -21,7 +24,7 @@ paths:
       operationId: getOembedPayload
       summary: Retrieve an oEmbed payload
       tags:
-      - oEmbed
+      - o Embed
       description: Return the oEmbed 1.0 payload for an apacorp.com URL.
       parameters:
       - name: format
@@ -54,6 +57,23 @@ paths:
                 $ref: '#/components/schemas/Error'
 components:
   schemas:
+    Error:
+      type: object
+      title: Error
+      description: WordPress REST API error envelope. Not RFC 9457 problem+json.
+      properties:
+        code:
+          type: string
+        message:
+          type: string
+        data:
+          type: object
+          properties:
+            status:
+              type: integer
+      required:
+      - code
+      - message
     OEmbed:
       type: object
       description: oEmbed 1.0 response as observed live on 2026-09-14.
@@ -91,28 +111,8 @@ components:
           type: integer
         thumbnail_height:
           type: integer
-    Error:
-      type: object
-      title: Error
-      description: WordPress REST API error envelope. Not RFC 9457 problem+json.
-      properties:
-        code:
-          type: string
-        message:
-          type: string
-        data:
-          type: object
-          properties:
-            status:
-              type: integer
-      required:
-      - code
-      - message
   securitySchemes:
     applicationPassword:
       type: http
       scheme: basic
       description: 'WordPress application passwords. The site''s own root discovery document at https://apacorp.com/wp-json/ publishes this as its only authentication method, with the authorization endpoint at https://apacorp.com/wp-admin/authorize-application.php. Credentials are a WordPress username plus an application password sent as HTTP Basic. It is NOT required for anything documented here: every operation in this spec was verified to answer anonymously on 2026-09-14. An authenticated caller additionally unlocks context=edit fields and the write methods, which are out of scope for this public profile.'
-security:
-- {}
-- applicationPassword: []

@@ -1,6 +1,6 @@
 openapi: 3.2.0
 info:
-  title: APA Corporation Media Hub API
+  title: APA Corporation Hub Media API
   version: wp/v2
   description: Public, unauthenticated read access to the APA Corporation Media Hub — the `pp_video_block` custom post type (REST base `presto-videos`) carrying APA corporate video content, and the WordPress media library backing apacorp.com. Verified live at 24 Media Hub entries and 1,209 media attachments on 2026-09-14. Anonymous access is read-only.
   contact:
@@ -17,6 +17,9 @@ info:
 servers:
 - url: https://apacorp.com/wp-json
   description: APA Corporation WordPress REST API
+security:
+- {}
+- applicationPassword: []
 tags:
 - name: Media
   description: APA Corporation video content and media library assets.
@@ -213,7 +216,7 @@ paths:
       responses:
         '200':
           description: A page of results.
-          headers: &id002
+          headers:
             X-WP-Total:
               description: Total number of items in the unpaginated collection.
               schema:
@@ -230,7 +233,7 @@ paths:
             application/json:
               schema:
                 type: array
-                items: &id001
+                items:
                   $ref: '#/components/schemas/PpVideoBlock'
         '400':
           description: Invalid parameter. WordPress returns a JSON error envelope with `code`, `message` and `data.status`.
@@ -450,7 +453,8 @@ paths:
           description: The requested resource.
           content:
             application/json:
-              schema: *id001
+              schema:
+                $ref: '#/components/schemas/PpVideoBlock'
         '400':
           description: Invalid parameter. WordPress returns a JSON error envelope with `code`, `message` and `data.status`.
           content:
@@ -673,12 +677,24 @@ paths:
       responses:
         '200':
           description: A page of results.
-          headers: *id002
+          headers:
+            X-WP-Total:
+              description: Total number of items in the unpaginated collection.
+              schema:
+                type: integer
+            X-WP-TotalPages:
+              description: Total number of pages available at the current `per_page`.
+              schema:
+                type: integer
+            Link:
+              description: RFC 8288 `next` / `prev` pagination links.
+              schema:
+                type: string
           content:
             application/json:
               schema:
                 type: array
-                items: &id003
+                items:
                   $ref: '#/components/schemas/Attachment'
         '400':
           description: Invalid parameter. WordPress returns a JSON error envelope with `code`, `message` and `data.status`.
@@ -910,7 +926,8 @@ paths:
           description: The requested resource.
           content:
             application/json:
-              schema: *id003
+              schema:
+                $ref: '#/components/schemas/Attachment'
         '400':
           description: Invalid parameter. WordPress returns a JSON error envelope with `code`, `message` and `data.status`.
           content:
@@ -931,145 +948,6 @@ paths:
                 $ref: '#/components/schemas/Error'
 components:
   schemas:
-    Error:
-      type: object
-      title: Error
-      description: WordPress REST API error envelope. Not RFC 9457 problem+json.
-      properties:
-        code:
-          type: string
-          description: Machine-readable WordPress error code, e.g. `rest_post_invalid_id`.
-        message:
-          type: string
-          description: Human-readable error message.
-        data:
-          type: object
-          description: Error data; carries the HTTP `status`.
-          properties:
-            status:
-              type: integer
-      required:
-      - code
-      - message
-    PpVideoBlock:
-      type: object
-      properties:
-        date:
-          type: string
-          description: The date the post was published, in the site's timezone.
-          format: date-time
-        date_gmt:
-          type: string
-          description: The date the post was published, as GMT.
-          format: date-time
-        guid:
-          type: object
-          description: The globally unique identifier for the post.
-          readOnly: true
-          properties:
-            raw:
-              type: string
-            rendered:
-              type: string
-        id:
-          type: integer
-          description: Unique identifier for the post.
-          readOnly: true
-        link:
-          type: string
-          description: URL to the post.
-          format: uri
-          readOnly: true
-        modified:
-          type: string
-          description: The date the post was last modified, in the site's timezone.
-          format: date-time
-          readOnly: true
-        modified_gmt:
-          type: string
-          description: The date the post was last modified, as GMT.
-          format: date-time
-          readOnly: true
-        slug:
-          type: string
-          description: An alphanumeric identifier for the post unique to its type.
-        status:
-          type: string
-          description: A named status for the post.
-          enum:
-          - publish
-          - future
-          - draft
-          - pending
-          - private
-          - acf-disabled
-          - wpra_emergency
-          - wpra_alert
-          - wpra_critical
-          - wpra_error
-          - wpra_warning
-          - wpra_notice
-          - wpra_info
-          - wpra_debug
-          - draft-revision
-          - pending-revision
-          - future-revision
-        type:
-          type: string
-          description: Type of post.
-          readOnly: true
-        class_list:
-          type: array
-          description: An array of the class names for the post container element.
-          readOnly: true
-          items:
-            type: string
-        title:
-          type: object
-          description: The title for the post.
-          properties:
-            raw:
-              type: string
-            rendered:
-              type: string
-        content:
-          type: object
-          description: The content for the post.
-          properties:
-            raw:
-              type: string
-            rendered:
-              type: string
-            block_version:
-              type: integer
-            protected:
-              type: boolean
-        meta:
-          type: object
-          description: Meta fields.
-          properties:
-            _acf_changed:
-              type: boolean
-            _uag_custom_page_level_css:
-              type: string
-            ngg_post_thumbnail:
-              type: integer
-            presto_player_instant_video_pages_enabled:
-              type: boolean
-        template:
-          type: string
-          description: The theme file to use to display the post.
-        pp_video_tag:
-          type: array
-          description: The terms assigned to the post in the pp_video_tag taxonomy.
-          items:
-            type: integer
-        acf:
-          type: object
-          description: ACF field data
-        publishpress_future_workflow_manual_trigger:
-          type: object
-          description: Workflow Manual Trigger
     Attachment:
       type: object
       properties:
@@ -1238,11 +1116,147 @@ components:
           type: integer
           description: Attachment file size in bytes.
           readOnly: true
+    PpVideoBlock:
+      type: object
+      properties:
+        date:
+          type: string
+          description: The date the post was published, in the site's timezone.
+          format: date-time
+        date_gmt:
+          type: string
+          description: The date the post was published, as GMT.
+          format: date-time
+        guid:
+          type: object
+          description: The globally unique identifier for the post.
+          readOnly: true
+          properties:
+            raw:
+              type: string
+            rendered:
+              type: string
+        id:
+          type: integer
+          description: Unique identifier for the post.
+          readOnly: true
+        link:
+          type: string
+          description: URL to the post.
+          format: uri
+          readOnly: true
+        modified:
+          type: string
+          description: The date the post was last modified, in the site's timezone.
+          format: date-time
+          readOnly: true
+        modified_gmt:
+          type: string
+          description: The date the post was last modified, as GMT.
+          format: date-time
+          readOnly: true
+        slug:
+          type: string
+          description: An alphanumeric identifier for the post unique to its type.
+        status:
+          type: string
+          description: A named status for the post.
+          enum:
+          - publish
+          - future
+          - draft
+          - pending
+          - private
+          - acf-disabled
+          - wpra_emergency
+          - wpra_alert
+          - wpra_critical
+          - wpra_error
+          - wpra_warning
+          - wpra_notice
+          - wpra_info
+          - wpra_debug
+          - draft-revision
+          - pending-revision
+          - future-revision
+        type:
+          type: string
+          description: Type of post.
+          readOnly: true
+        class_list:
+          type: array
+          description: An array of the class names for the post container element.
+          readOnly: true
+          items:
+            type: string
+        title:
+          type: object
+          description: The title for the post.
+          properties:
+            raw:
+              type: string
+            rendered:
+              type: string
+        content:
+          type: object
+          description: The content for the post.
+          properties:
+            raw:
+              type: string
+            rendered:
+              type: string
+            block_version:
+              type: integer
+            protected:
+              type: boolean
+        meta:
+          type: object
+          description: Meta fields.
+          properties:
+            _acf_changed:
+              type: boolean
+            _uag_custom_page_level_css:
+              type: string
+            ngg_post_thumbnail:
+              type: integer
+            presto_player_instant_video_pages_enabled:
+              type: boolean
+        template:
+          type: string
+          description: The theme file to use to display the post.
+        pp_video_tag:
+          type: array
+          description: The terms assigned to the post in the pp_video_tag taxonomy.
+          items:
+            type: integer
+        acf:
+          type: object
+          description: ACF field data
+        publishpress_future_workflow_manual_trigger:
+          type: object
+          description: Workflow Manual Trigger
+    Error:
+      type: object
+      title: Error
+      description: WordPress REST API error envelope. Not RFC 9457 problem+json.
+      properties:
+        code:
+          type: string
+          description: Machine-readable WordPress error code, e.g. `rest_post_invalid_id`.
+        message:
+          type: string
+          description: Human-readable error message.
+        data:
+          type: object
+          description: Error data; carries the HTTP `status`.
+          properties:
+            status:
+              type: integer
+      required:
+      - code
+      - message
   securitySchemes:
     applicationPassword:
       type: http
       scheme: basic
       description: 'WordPress application passwords. The site''s own root discovery document at https://apacorp.com/wp-json/ publishes this as its only authentication method, with the authorization endpoint at https://apacorp.com/wp-admin/authorize-application.php. Credentials are a WordPress username plus an application password sent as HTTP Basic. It is NOT required for anything documented here: every operation in this spec was verified to answer anonymously on 2026-09-14. An authenticated caller additionally unlocks context=edit fields and the write methods, which are out of scope for this public profile.'
-security:
-- {}
-- applicationPassword: []
