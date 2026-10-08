@@ -69,6 +69,8 @@ apis:
   x-platform: wordpress
   x-platform-surface: rest
 common:
+- type: FinOps
+  url: finops/apa-finops.yml
 - type: DomainSecurity
   url: security/apa-domain-security.yml
 - type: LinkedIn
