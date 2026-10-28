@@ -1,4 +1,4 @@
-# APA Corporation (apa)
+# APA
 
 <!-- API-EVANGELIST-PROVENANCE:BEGIN -->
 > ### About this repository
@@ -66,66 +66,123 @@
 
 APA Corporation is an independent energy company that explores for, develops, and produces natural gas, crude oil, and natural gas liquids, with operations in the United States, Egypt, the United Kingdom, and Suriname. Organized in Delaware and headquartered in Houston, Texas, APA is listed on Nasdaq (APA) and listed on Nasdaq Texas since March 2026.
 
-**URL:** [https://raw.githubusercontent.com/api-evangelist/apa/refs/heads/main/apis.yml](https://raw.githubusercontent.com/api-evangelist/apa/refs/heads/main/apis.yml)
+**Areas:** Oil and Gas · Energy · Exploration · Production · WordPress · REST · Newsroom · Investor Relations · Energy Production
 
-**Run:** [Capabilities Using Naftiko](https://github.com/naftiko/fleet?utm_source=api-evangelist&utm_medium=readme&utm_campaign=company-api-evangelist&utm_content=repo)
+## APA on APIs.io
 
-## Tags:
+Everything profiled for APA is published on APIs.io rather than in this repository. Start at the provider page — **[apis.io/providers/apa/](https://apis.io/providers/apa/)** — or go straight to one of the APIs or properties below.
 
- - Oil And Gas, Energy, Exploration, Production
+### APIs (1)
 
-## Timestamps
+- [APA Corporation Website (WordPress REST)](https://apis.io/apis/apa/apacorp-com-website-wordpress-rest/) — The public WordPress REST API (wp-json) of the APA Corporation website at apacorp.com: the route index of the site's content management system, catalogued…
 
-- **Created:** 2026-03-21
-- **Modified:** 2026-04-19
+### Published properties
 
-## APIs
+Each property below is a page on APIs.io carrying the machine-readable artifact and what it says.
 
-### APA Corporation
-APA Corporation explores for and produces oil and natural gas in the United States, Egypt, the United Kingdom, and Suriname through its Apache Corporation and APA Suriname subsidiaries.
+#### MCP servers (1)
 
-**Human URL:** [https://apacorp.com](https://apacorp.com)
+Model Context Protocol servers that expose the API to agents.
 
-#### Tags:
+- [apa-mcp.yml](https://apis.io/servers/apa/apa-mcp-yml/)
 
- - Oil And Gas, Energy, Exploration, Production
+#### Agentic access (1)
 
-#### Properties
+Which operations an agent can call, which act, and which need a human in the loop.
 
-- [Documentation](https://apacorp.com)
-- [GettingStarted](https://investor.apacorp.com)
+- [Apa Agentic Access](https://apis.io/agentic-access/apa/apa-agentic-access/)
 
-## Common Properties
+#### Examples (2)
+
+Example requests and responses.
+
+- [Moved to /providers/apa/](https://apis.io/examples/apa/apa-discovery-types/)
+- [Apa Ticker Quote](https://apis.io/examples/apa/apa-ticker-quote/)
+
+#### Security (2)
+
+Authentication, trust centre, and vulnerability disclosure.
+
+- [Apa Authentication](https://apis.io/security/apa/apa-authentication/)
+- [Apa Domain Security](https://apis.io/security/apa/apa-domain-security/)
+
+#### Plans and pricing (1)
+
+Published plans, tiers and prices.
+
+- [Apa Plans Pricing](https://apis.io/plans/apa/apa-plans-pricing/)
+
+#### Rate limits (1)
+
+Published request limits.
+
+- [Apa Rate Limits](https://apis.io/rate-limits/apa/apa-rate-limits/)
+
+#### FinOps (1)
+
+What the API costs to run, by operation.
+
+- [Apa Finops](https://apis.io/finops/apa/apa-finops/)
+
+## Where to find this API
+
+Links to the company's own pages. This repository publishes no copy of their specifications — the canonical document is theirs and lives at the URLs below.
 
 - [Website](https://apacorp.com)
-- [Documentation](https://apacorp.com)
-- [Support](https://apacorp.com/contact)
+- [Support](https://apacorp.com/newsroom/contact-media-relations/)
+- [Blog](https://apacorp.com/feed/)
+- [Terms of service](https://apacorp.com/terms-of-use/)
+- [Privacy policy](https://apacorp.com/privacy-policy/)
 
-## Features
+## API Evangelist rating
 
-| Name | Description |
-|------|-------------|
-| United States Operations | Exploration and production activities in the Permian Basin and other US basins through the Apache Corporation subsidiary. |
-| Egypt Operations | Long-standing operations in Egypt's Western Desert through Apache Corporation, one of the largest private natural gas producers in Egypt. |
-| United Kingdom Operations | North Sea oil and gas operations through Apache Corporation's UK subsidiary. |
-| Suriname Exploration | Offshore exploration in Suriname Block 58 through the APA Suriname subsidiary, with significant oil discoveries including the GranMorgu project. |
-| Alaska Exploration | Exploration activities on Alaska's North Slope including the Sockeye-2 well oil discovery in partnership with Lagniappe Alaska and Santos. |
+**Kin Score 21.6** — emerging · rubric 0.24.0 · scored 2026-10-17
 
-## Use Cases
+| Facet | Score |
+|---|---|
+| Discoverability | 64.3 |
+| Contract quality | 6.5 |
+| Contract governance | 18.2 |
+| Operational transparency | 0.0 |
+| Developer ergonomics | 30.4 |
+| Access clarity | 21.1 |
 
-| Name | Description |
-|------|-------------|
-| Investor Relations | Access financial results, stock information, SEC filings, and corporate governance information for APA Corporation shareholders. |
-| Energy Production Data | Track oil, natural gas, and natural gas liquids production data across APA's operational regions. |
+**Agent readiness 11.9** — agent-aware
 
-## Integrations
+| Agent-readiness dimension | Result |
+|---|---|
+| Spec Presence | — |
+| Agentic Access | derived (partial credit) |
+| Reversibility Documented | — |
+| MCP Server | — |
+| Auth Clarity | bearer (partial credit) |
+| Idempotency | — |
+| Error Semantics | documented (partial credit) |
+| OpenAPI Examples | documented (partial credit) |
+| Rate Limit Signal | documented (partial credit) |
+| Event Surface Described | — |
+| Agent Skills | derived (partial credit) |
+| Well Known Catalog | — |
+| Consent Identity | — |
+| Agent Card | — |
+| Dry Run Mode | — |
+| Delegated Identity | — |
+| Protected Resource Metadata | — |
+| Dynamic Client Registration | — |
+| Agentic Commerce | — |
 
-| Name | Description |
-|------|-------------|
-| Nasdaq | APA Corporation is listed on Nasdaq (ticker: APA) and Nasdaq Texas, enabling trading and investor relations integrations. |
+**Regulatory alignment 20.5** — Energy & Utilities
 
-## Maintainers
+The rubric is published at [github.com/api-evangelist/kin-score](https://github.com/api-evangelist/kin-score). The per-check breakdown behind these numbers — which checks were earned, partial or missed — along with score history and how this provider compares to its peers, is available at [apis.io/providers/apa/](https://apis.io/providers/apa/).
 
-**FN:** Kin Lane
+## How this profile is made
 
-**Email:** kin@apievangelist.com
+API Evangelist profiles a company's public API surface the way a developer would find it: the website, developer portal and documentation, the specifications it publishes, its public repositories, and its pricing, status and changelog pages. From that it derives the properties above — contracts split per API, workflows, schemas, collections, governance rules, plans and rate limits — and scores them against the published [Kin Score rubric](https://github.com/api-evangelist/kin-score).
+
+The artifacts are published on [APIs.io](https://apis.io), not in this repository. This repository is the public record for APA: the place to say something is wrong, missing or out of date, and to ask for a re-score or a removal.
+
+## Open an issue
+
+- **Something about this listing** — a wrong description, a missing API, a stale artifact or a question about the rating: [open an issue on this repository](https://github.com/api-evangelist/apa/issues/new).
+- **A new API, or one that is not in the catalog yet** — [submit it on APIs.io](https://apis.io/add/).
+- **Anything else** — [the APIs.io inbox](https://github.com/api-search/inbox/issues/new) or [info@apievangelist.com](mailto:info@apievangelist.com).
